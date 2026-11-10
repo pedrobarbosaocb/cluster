@@ -417,3 +417,4 @@
 }
 .lb-token .token-art { width: 34px; height: 34px; }
 .lb-bar .swatches { width: 120px; height: 18px; border: 2px solid var(--ink); margin-left: auto; }
+.done .stamp { font-size: 30px; margin: 0; }

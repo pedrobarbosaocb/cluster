@@ -97,6 +97,10 @@ input {
   height: 100%;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -315,7 +319,7 @@ main {
   border: 3px solid var(--red);
   padding: 2px 10px;
   transform: rotate(-4deg);
-  mix-blend-mode: multiply;
+  background: var(--paper);
 }
 
 .headline {
@@ -386,7 +390,7 @@ main {
   text-align: center;
   color: var(--ink-soft);
 }
-.empty .ico {
+.empty > .ico {
   width: 96px;
   height: 96px;
   color: var(--ink);
@@ -400,4 +404,8 @@ main {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+.nav:empty {
+  display: none;
 }
