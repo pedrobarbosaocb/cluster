@@ -9,6 +9,7 @@ const dist = resolve(process.env.STATIC_DIR ?? 'dist');
 
 const app = await createApp({ dataDir, staticDir: existsSync(dist) ? dist : undefined,
   corsOrigin: process.env.CORS_ORIGIN,
+  adminToken: process.env.ADMIN_TOKEN,
 });
 app.listen(port, host, () => {
   console.log(`🤘 Moodboard da FlatHead em http://${host === '0.0.0.0' ? 'localhost' : host}:${port}`);

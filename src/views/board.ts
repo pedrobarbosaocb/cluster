@@ -2,17 +2,17 @@ import { buildMoodboard } from '../core/moodboard.ts';
 import type { BoardState, ImageRec } from '../core/types.ts';
 import { TOKENS } from '../core/votes.ts';
 import { api } from '../data/api.ts';
-import { h, icon, iconBtn, toast } from '../ui/dom.ts';
+import { confirmBtn, h, icon, iconBtn, toast } from '../ui/dom.ts';
 import { tokenArt } from '../ui/icons.ts';
-import { boardHeader, notFound } from './common.ts';
+import { boardHeader, loadBoard } from './common.ts';
 
 const REFRESH_MS = 15000;
 const ZOOMS = [0.5, 0.65, 0.8, 1, 1.25, 1.5, 2];
 
 export async function boardView(root: HTMLElement, { id }: Record<string, string>): Promise<() => void> {
   const a = await api();
-  let state = await a.getBoard(id!);
-  if (!state) return notFound(root);
+  let state = await loadBoard(root, a, id!);
+  if (!state) return () => {};
 
   let zi = 3;
   let sig = '';
@@ -129,6 +129,18 @@ export async function boardView(root: HTMLElement, { id }: Record<string, string
         ),
         h('span', { class: 'chip' }, icon('people'), String(count)),
         h('div', { class: 'swatches' }, ...img.palette.map((p) => h('i', { style: `background:${p.hex}`, title: p.hex }))),
+        a.isOwner(id!)
+          ? confirmBtn('trash', 'Apagar imagem', async () => {
+              try {
+                await a.deleteImage(id!, img.id);
+                close();
+                toast('trash', 'apagada');
+                await refresh();
+              } catch {
+                toast('bolt', 'falhou');
+              }
+            }, 'btn-ghost')
+          : null,
         iconBtn('close', 'Fechar', close, 'btn-ghost'),
       ),
     );
@@ -137,15 +149,17 @@ export async function boardView(root: HTMLElement, { id }: Record<string, string
     dlg.showModal();
   }
 
-  render(state);
-  const timer = window.setInterval(async () => {
+  async function refresh(): Promise<void> {
     try {
       const s = await a.getBoard(id!);
       if (s) render((state = s));
     } catch {
       /* tenta de novo no próximo ciclo */
     }
-  }, REFRESH_MS);
+  }
+
+  render(state);
+  const timer = window.setInterval(() => void refresh(), REFRESH_MS);
 
   return () => clearInterval(timer);
 }

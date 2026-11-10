@@ -59,7 +59,7 @@ export async function homeView(root: HTMLElement): Promise<void> {
         h(
           'a',
           { class: 'board-card', href: `#/b/${b.id}` },
-          icon('board'),
+          icon(b.locked ? 'lock' : 'board'),
           h('strong', {}, b.name),
           h('time', { datetime: new Date(b.createdAt).toISOString() }, new Date(b.createdAt).toLocaleDateString()),
         ),

@@ -63,6 +63,7 @@ export function mountShell(app: HTMLElement): HTMLElement {
       ['upload', 'Subir imagens', `/b/${id}/up`],
       ['cards', 'Avaliar', `/b/${id}/vote`],
       ['board', 'Moodboard', `/b/${id}`],
+      ['key', 'Dono', `/b/${id}/admin`],
     ];
     nav.replaceChildren(
       ...items.map(([ic, label, to]) =>

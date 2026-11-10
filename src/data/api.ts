@@ -10,14 +10,33 @@ export interface NewImage {
   palette: Palette;
 }
 
+/** O board pede PIN e este dispositivo não tem (ou tem um errado). */
+export class LockedError extends Error {
+  constructor() {
+    super('locked');
+  }
+}
+
 /** Contrato único de dados — implementado pelo servidor (HTTP) e pelo modo local (IndexedDB). */
 export interface Api {
   readonly mode: 'server' | 'local';
+  /** PIN só faz sentido quando os dados saem do dispositivo */
+  readonly supportsPin: boolean;
   listBoards(): Promise<Board[]>;
   createBoard(name: string): Promise<Board>;
+  /** null = não existe; LockedError = precisa de PIN */
   getBoard(id: string): Promise<BoardState | null>;
   addImage(boardId: string, img: NewImage): Promise<ImageRec>;
   vote(boardId: string, imageId: string, voterId: string, value: number): Promise<Vote>;
+
+  /** guarda o PIN e testa; false se estiver errado */
+  unlock(boardId: string, pin: string): Promise<boolean>;
+  isOwner(boardId: string): boolean;
+  ownerKey(boardId: string): string | null;
+  /** "entrar como dono" com a chave copiada de outro aparelho */
+  claimOwner(boardId: string, key: string): Promise<boolean>;
+  deleteImage(boardId: string, imageId: string): Promise<void>;
+  setPin(boardId: string, pin: string | null): Promise<Board>;
 }
 
 let current: Promise<Api> | null = null;

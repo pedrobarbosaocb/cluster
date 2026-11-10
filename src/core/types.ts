@@ -13,6 +13,8 @@ export interface Board {
   id: string;
   name: string;
   createdAt: number;
+  /** protegido por PIN */
+  locked?: boolean;
 }
 
 export interface ImageRec {

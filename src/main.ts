@@ -6,6 +6,7 @@ import { homeView } from './views/home.ts';
 import { uploadView } from './views/upload.ts';
 import { voteView } from './views/vote.ts';
 import { boardView } from './views/board.ts';
+import { adminView } from './views/admin.ts';
 import { notFound } from './views/common.ts';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
@@ -16,4 +17,5 @@ new Router(main, notFound)
   .on('/b/:id', boardView)
   .on('/b/:id/up', uploadView)
   .on('/b/:id/vote', voteView)
+  .on('/b/:id/admin', adminView)
   .start();
