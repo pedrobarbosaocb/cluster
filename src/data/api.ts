@@ -17,6 +17,15 @@ export class LockedError extends Error {
   }
 }
 
+export interface LiveHandlers {
+  /** algo mudou no board (upload, voto, exclusão, PIN) */
+  onChange(kind: string): void;
+  /** conectado em tempo real ou não */
+  onStatus?(live: boolean): void;
+  /** o board passou a pedir PIN */
+  onLocked?(): void;
+}
+
 /** Contrato único de dados — implementado pelo servidor (HTTP) e pelo modo local (IndexedDB). */
 export interface Api {
   readonly mode: 'server' | 'local';
@@ -37,6 +46,8 @@ export interface Api {
   claimOwner(boardId: string, key: string): Promise<boolean>;
   deleteImage(boardId: string, imageId: string): Promise<void>;
   setPin(boardId: string, pin: string | null): Promise<Board>;
+  /** escuta mudanças em tempo real; devolve a função para parar */
+  subscribe(boardId: string, handlers: LiveHandlers): () => void;
 }
 
 let current: Promise<Api> | null = null;

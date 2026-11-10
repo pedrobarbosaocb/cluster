@@ -5,7 +5,7 @@ import { api } from '../data/api.ts';
 import { voterId } from '../data/identity.ts';
 import { h, icon, iconBtn, toast } from '../ui/dom.ts';
 import { tokenArt } from '../ui/icons.ts';
-import { boardHeader, loadBoard } from './common.ts';
+import { boardHeader, loadBoard, rerender } from './common.ts';
 
 const hash = (s: string): number => [...s].reduce((a, c) => (Math.imul(a, 31) + c.charCodeAt(0)) | 0, 7);
 
@@ -26,9 +26,9 @@ export async function voteView(root: HTMLElement, { id }: Record<string, string>
   const me = voterId();
 
   const mine = new Map(state.votes.filter((v) => v.voterId === me).map((v) => [v.imageId, v.value]));
-  const all = shuffle(state.images, hash(me + id));
+  let all = shuffle(state.images, hash(me + id));
   let queue: ImageRec[] = all.filter((i) => !mine.has(i.id));
-  const history: { img: ImageRec; prev: number | undefined }[] = [];
+  let history: { img: ImageRec; prev: number | undefined }[] = [];
 
   const progress = h('span', { class: 'chip', title: 'avaliadas' }, icon('check'), '');
   const stage = h('div', { class: 'stage' });
@@ -226,6 +226,33 @@ export async function voteView(root: HTMLElement, { id }: Record<string, string>
   };
   window.addEventListener('keydown', onKey);
 
+  /** Tempo real: imagens novas entram no fim da fila; apagadas saem — sem mexer na carta atual. */
+  const sync = async (): Promise<void> => {
+    const s = await a.getBoard(id!).catch(() => null);
+    if (!s) return;
+    const alive = new Set(s.images.map((i) => i.id));
+    const known = new Set(all.map((i) => i.id));
+    const fresh = shuffle(s.images.filter((i) => !known.has(i.id)), hash(me + s.images.length));
+    const wasEmpty = queue.length === 0;
+    const currentGone = !!queue[0] && !alive.has(queue[0].id);
+    all = [...all.filter((i) => alive.has(i.id)), ...fresh];
+    queue = [...queue.filter((i) => alive.has(i.id)), ...fresh.filter((i) => !mine.has(i.id))];
+    history = history.filter((x) => alive.has(x.img.id));
+    state.images = s.images;
+    if (!busy && (currentGone || (wasEmpty && queue.length))) render();
+    else updateProgress();
+    if (fresh.length) toast('image', `+${fresh.length}`);
+  };
+  const stop = a.subscribe(id!, {
+    onChange: (kind) => {
+      if (kind === 'image' || kind === 'delete') void sync();
+    },
+    onLocked: rerender,
+  });
+
   render();
-  return () => window.removeEventListener('keydown', onKey);
+  return () => {
+    window.removeEventListener('keydown', onKey);
+    stop();
+  };
 }

@@ -1,6 +1,16 @@
 import { newId } from '../core/ids.ts';
 import type { Board, BoardState, ImageRec, Vote } from '../core/types.ts';
-import type { Api, NewImage } from './api.ts';
+import type { Api, LiveHandlers, NewImage } from './api.ts';
+
+const channel = (boardId: string): BroadcastChannel | null =>
+  typeof BroadcastChannel === 'undefined' ? null : new BroadcastChannel(`flathead-${boardId}`);
+
+/** Avisa as outras abas deste navegador que o board mudou. */
+function notify(boardId: string, kind: string): void {
+  const c = channel(boardId);
+  c?.postMessage({ kind });
+  c?.close();
+}
 
 const DB = 'flathead-moodboard';
 type Store = 'boards' | 'images' | 'votes';
@@ -65,12 +75,14 @@ export class LocalApi implements Api {
       createdAt: Date.now(),
     };
     await wrap((await this.store('images', 'readwrite')).add(rec));
+    notify(boardId, 'image');
     return rec;
   }
 
   async vote(boardId: string, imageId: string, voterId: string, value: number): Promise<Vote> {
     const v: Vote = { imageId, voterId, value, at: Date.now() };
     await wrap((await this.store('votes', 'readwrite')).put({ ...v, boardId }));
+    notify(boardId, 'vote');
     return v;
   }
 
@@ -103,6 +115,16 @@ export class LocalApi implements Api {
       tx.oncomplete = () => resolve();
       tx.onerror = () => reject(tx.error);
     });
+    notify(boardId, 'delete');
+  }
+
+  /** Tempo real entre abas do mesmo navegador (os dados não saem do aparelho). */
+  subscribe(boardId: string, h: LiveHandlers): () => void {
+    const c = channel(boardId);
+    if (!c) return () => {};
+    c.onmessage = (e: MessageEvent<{ kind: string }>) => h.onChange(e.data?.kind ?? 'unknown');
+    h.onStatus?.(true);
+    return () => c.close();
   }
 
   async setPin(): Promise<Board> {
