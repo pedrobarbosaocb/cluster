@@ -3,9 +3,9 @@ import { createReadStream } from 'node:fs';
 import { mkdir, readFile, rename, rm, stat, writeFile } from 'node:fs/promises';
 import { extname, join, normalize, resolve, sep } from 'node:path';
 import { isId, newId } from '../src/core/ids.ts';
-import { cleanName, cleanPalette, parseDataUrl } from '../src/core/validate.ts';
+import { cleanLayout, cleanName, cleanPalette, parseDataUrl } from '../src/core/validate.ts';
 import { isValidVote } from '../src/core/votes.ts';
-import type { Board, BoardState, ImageRec, Vote } from '../src/core/types.ts';
+import type { Board, BoardState, ImageRec, Layout, Vote } from '../src/core/types.ts';
 import { Hub } from './hub.ts';
 import { checkOwner, checkPin, hashPin, newOwnerKey, PIN_RE, Throttle, type BoardSecret } from './auth.ts';
 
@@ -25,6 +25,8 @@ interface Db {
   votes: (Vote & { boardId: string })[];
   /** segredos fora dos objetos públicos — nunca enviados ao cliente */
   secrets: Record<string, BoardSecret>;
+  /** layout manual por board (ausente = automático) */
+  layouts: Record<string, Layout>;
 }
 
 const MIME: Record<string, string> = {
@@ -50,7 +52,7 @@ class HttpError extends Error {
 
 /** Persistência simples: estado em memória, gravado em JSON de forma atômica. */
 class JsonStore {
-  db: Db = { boards: [], images: [], votes: [], secrets: {} };
+  db: Db = { boards: [], images: [], votes: [], secrets: {}, layouts: {} };
   private file: string;
   private writing: Promise<void> = Promise.resolve();
 
@@ -139,6 +141,7 @@ export async function createApp(opts: AppOptions): Promise<Server> {
       board: pub(board),
       images: store.db.images.filter((i) => i.boardId === id),
       votes: store.db.votes.filter((v) => v.boardId === id).map(({ boardId: _b, ...v }) => v),
+      layout: store.db.layouts[id] ?? null,
     };
   };
 
@@ -211,12 +214,32 @@ export async function createApp(opts: AppOptions): Promise<Server> {
       return send(res, 200, pub(s.board));
     }
 
+    if (sub === 'layout' && method === 'PUT') {
+      if (!isOwner) throw new HttpError(403, 'só o dono');
+      const body = await readJson(req, 256 * 1024);
+      if (body.layout === null) delete store.db.layouts[boardId];
+      else {
+        const layout = cleanLayout(body.layout, new Set(s.images.map((i) => i.id)));
+        if (!layout) throw new HttpError(400, 'layout inválido');
+        store.db.layouts[boardId] = layout;
+      }
+      await store.save();
+      hub.emit(boardId, 'layout');
+      return send(res, 200, { layout: store.db.layouts[boardId] ?? null });
+    }
+
     if (sub === 'images' && subId && method === 'DELETE') {
       if (!isOwner) throw new HttpError(403, 'só o dono');
       const img = s.images.find((i) => i.id === subId);
       if (!img) throw new HttpError(404, 'imagem não encontrada');
       store.db.images = store.db.images.filter((i) => i.id !== subId);
       store.db.votes = store.db.votes.filter((v) => v.imageId !== subId);
+      const lay = store.db.layouts[boardId];
+      if (lay) {
+        const groups = lay.groups.map((g) => g.filter((x) => x !== subId)).filter((g) => g.length);
+        if (groups.length) store.db.layouts[boardId] = { groups };
+        else delete store.db.layouts[boardId];
+      }
       await store.save();
       hub.emit(boardId, 'delete');
       for (const u of [img.url, img.thumbUrl])

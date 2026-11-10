@@ -1,4 +1,4 @@
-import type { Board, BoardState, ImageRec, Palette, Vote } from '../core/types.ts';
+import type { Board, BoardState, ImageRec, Layout, Palette, Vote } from '../core/types.ts';
 
 export interface NewImage {
   /** data URL da imagem redimensionada */
@@ -46,6 +46,8 @@ export interface Api {
   claimOwner(boardId: string, key: string): Promise<boolean>;
   deleteImage(boardId: string, imageId: string): Promise<void>;
   setPin(boardId: string, pin: string | null): Promise<Board>;
+  /** fixa o layout manual (null = volta ao automático) — só o dono */
+  setLayout(boardId: string, layout: Layout | null): Promise<void>;
   /** escuta mudanças em tempo real; devolve a função para parar */
   subscribe(boardId: string, handlers: LiveHandlers): () => void;
 }

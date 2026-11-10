@@ -32,6 +32,16 @@ Arrastar a carta para a esquerda pula; `Z` desfaz. Cada dispositivo tem uma iden
 - Os arquivos de imagem (`/uploads/*`) não pedem PIN: os nomes são aleatórios e não aparecem sem acesso ao board, mas quem tiver o link direto de uma imagem consegue abri-la.
 - No modo GitHub Pages (local) não há PIN: os dados nem saem do navegador, e quem usa é sempre o dono.
 
+## Ajuste manual do layout
+
+- O dono liga o modo edição (✥ no cabeçalho do board) e arrasta (mouse ou toque):
+  - uma **imagem** para antes/depois de outra (lado em que soltar), para dentro de outro grupo ou para o **+** (grupo novo);
+  - a **faixa de cores** de um grupo para reordenar os grupos.
+- O tamanho continua vindo dos votos; o que fica fixo é **em qual grupo** cada imagem está e a **ordem**.
+- Imagens subidas depois entram no grupo do membro de cor mais parecida; se nenhuma combinar, formam grupo novo.
+- ↻ (dois toques) volta ao agrupamento automático. Esc cancela um arraste.
+- O layout vale para todo mundo, chega ao vivo para quem está olhando e é usado no PNG exportado.
+
 ## Tempo real
 
 - O board e a votação se atualizam na hora (⚡ amarelo no cabeçalho = conectado): votos, uploads e exclusões de outras pessoas aparecem em menos de 1 s.

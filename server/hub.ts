@@ -1,6 +1,6 @@
 import type { ServerResponse } from 'node:http';
 
-export type ChangeKind = 'image' | 'delete' | 'vote' | 'pin';
+export type ChangeKind = 'image' | 'delete' | 'vote' | 'pin' | 'layout';
 
 /**
  * Hub de Server-Sent Events: guarda as conexões abertas por board e

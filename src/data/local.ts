@@ -1,5 +1,8 @@
 import { newId } from '../core/ids.ts';
-import type { Board, BoardState, ImageRec, Vote } from '../core/types.ts';
+import type { Board, BoardState, ImageRec, Layout, Vote } from '../core/types.ts';
+
+/** no modo local o layout fica junto do registro do board */
+type BoardRecord = Board & { layout?: Layout | null };
 import type { Api, LiveHandlers, NewImage } from './api.ts';
 
 const channel = (boardId: string): BroadcastChannel | null =>
@@ -45,8 +48,8 @@ export class LocalApi implements Api {
   }
 
   async listBoards(): Promise<Board[]> {
-    const all = await wrap((await this.store('boards')).getAll() as IDBRequest<Board[]>);
-    return all.sort((a, b) => b.createdAt - a.createdAt);
+    const all = await wrap((await this.store('boards')).getAll() as IDBRequest<BoardRecord[]>);
+    return all.map(({ layout: _l, ...b }) => b).sort((a, b) => b.createdAt - a.createdAt);
   }
 
   async createBoard(name: string): Promise<Board> {
@@ -56,11 +59,12 @@ export class LocalApi implements Api {
   }
 
   async getBoard(id: string): Promise<BoardState | null> {
-    const board = await wrap((await this.store('boards')).get(id) as IDBRequest<Board | undefined>);
-    if (!board) return null;
+    const rec = await wrap((await this.store('boards')).get(id) as IDBRequest<BoardRecord | undefined>);
+    if (!rec) return null;
+    const { layout = null, ...board } = rec;
     const images = await wrap((await this.store('images')).index('boardId').getAll(id) as IDBRequest<ImageRec[]>);
     const votes = await wrap((await this.store('votes')).index('boardId').getAll(id) as IDBRequest<Vote[]>);
-    return { board, images: images.sort((a, b) => a.createdAt - b.createdAt), votes };
+    return { board, images: images.sort((a, b) => a.createdAt - b.createdAt), votes, layout };
   }
 
   async addImage(boardId: string, img: NewImage): Promise<ImageRec> {
@@ -125,6 +129,14 @@ export class LocalApi implements Api {
     c.onmessage = (e: MessageEvent<{ kind: string }>) => h.onChange(e.data?.kind ?? 'unknown');
     h.onStatus?.(true);
     return () => c.close();
+  }
+
+  async setLayout(boardId: string, layout: Layout | null): Promise<void> {
+    const boards = await this.store('boards', 'readwrite');
+    const rec = await wrap(boards.get(boardId) as IDBRequest<BoardRecord | undefined>);
+    if (!rec) return;
+    await wrap(boards.put({ ...rec, layout }));
+    notify(boardId, 'layout');
   }
 
   async setPin(): Promise<Board> {

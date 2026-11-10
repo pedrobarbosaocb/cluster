@@ -35,8 +35,15 @@ export interface Vote {
   at: number;
 }
 
+/** Layout manual: grupos em ordem, cada um com ids de imagem em ordem. */
+export interface Layout {
+  groups: string[][];
+}
+
 export interface BoardState {
   board: Board;
   images: ImageRec[];
   votes: Vote[];
+  /** null/ausente = agrupamento automático por paleta */
+  layout?: Layout | null;
 }
