@@ -62,7 +62,7 @@ export async function boardView(root: HTMLElement, { id }: Record<string, string
         const byId = new Map(c.images.map((i) => [i.id, i]));
         return h(
           'section',
-          { class: 'cluster', style: `--tilt:${ci % 2 ? 0.6 : -0.6}deg`, 'aria-label': `grupo ${ci + 1}` },
+          { class: 'cluster', 'aria-label': `grupo ${ci + 1}` },
           h('div', { class: 'cluster-palette', title: c.palette.map((p) => p.hex).join(' ') }, ...c.palette.map((p) => h('i', { style: `background:${p.hex};flex:${p.weight}` }))),
           h(
             'div',
@@ -75,7 +75,7 @@ export async function boardView(root: HTMLElement, { id }: Record<string, string
                 {
                   class: 'piece',
                   type: 'button',
-                  style: `--x:${p.x};--y:${p.y};--pw:${p.w};--ph:${p.h};--r:${(((k * 53) % 9) - 4) * 0.35}deg;--d:${k * 30}ms`,
+                  style: `--x:${p.x};--y:${p.y};--pw:${p.w};--ph:${p.h};--d:${k * 30}ms`,
                   'aria-label': `imagem, nota ${sc.score.toFixed(1)}`,
                   onclick: () => openLightbox(img, sc.breakdown, sc.count),
                 },

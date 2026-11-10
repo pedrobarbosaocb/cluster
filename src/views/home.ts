@@ -55,10 +55,10 @@ export async function homeView(root: HTMLElement): Promise<void> {
   try {
     const boards = await a.listBoards();
     list.append(
-      ...boards.map((b, i) =>
+      ...boards.map((b) =>
         h(
           'a',
-          { class: 'board-card', href: `#/b/${b.id}`, style: `--tilt:${((i * 37) % 7) - 3}deg` },
+          { class: 'board-card', href: `#/b/${b.id}` },
           icon('board'),
           h('strong', {}, b.name),
           h('time', { datetime: new Date(b.createdAt).toISOString() }, new Date(b.createdAt).toLocaleDateString()),
