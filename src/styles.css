@@ -12,6 +12,10 @@
   --dot: rgba(21, 18, 14, 0.09);
   --shadow: var(--ink);
   --on-red: #f6efdf;
+  --specks: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27320%27%20height%3D%27320%27%20fill%3D%27%2315120e%27%3E%3Ccircle%20cx%3D%27294.9%27%20cy%3D%2728.7%27%20r%3D%270.57%27%20fill-opacity%3D%270.69%27%2F%3E%3Ccircle%20cx%3D%27312.8%27%20cy%3D%27268.1%27%20r%3D%271.24%27%20fill-opacity%3D%270.71%27%2F%3E%3Ccircle%20cx%3D%2736.5%27%20cy%3D%27288.7%27%20r%3D%270.62%27%20fill-opacity%3D%270.55%27%2F%3E%3Ccircle%20cx%3D%27109.6%27%20cy%3D%2747.2%27%20r%3D%271.06%27%20fill-opacity%3D%270.37%27%2F%3E%3Ccircle%20cx%3D%27265.7%27%20cy%3D%27115.2%27%20r%3D%271.21%27%20fill-opacity%3D%270.48%27%2F%3E%3Ccircle%20cx%3D%2783.4%27%20cy%3D%2727.7%27%20r%3D%270.71%27%20fill-opacity%3D%270.51%27%2F%3E%3Ccircle%20cx%3D%2722.0%27%20cy%3D%27191.0%27%20r%3D%270.47%27%20fill-opacity%3D%270.26%27%2F%3E%3Ccircle%20cx%3D%27168.4%27%20cy%3D%2744.0%27%20r%3D%271.33%27%20fill-opacity%3D%270.32%27%2F%3E%3Ccircle%20cx%3D%2783.9%27%20cy%3D%27140.2%27%20r%3D%270.64%27%20fill-opacity%3D%270.51%27%2F%3E%3Ccircle%20cx%3D%2770.8%27%20cy%3D%27163.5%27%20r%3D%274.00%27%20fill-opacity%3D%270.67%27%2F%3E%3Ccircle%20cx%3D%27283.0%27%20cy%3D%27284.6%27%20r%3D%270.53%27%20fill-opacity%3D%270.26%27%2F%3E%3Ccircle%20cx%3D%279.3%27%20cy%3D%2716.6%27%20r%3D%271.09%27%20fill-opacity%3D%270.64%27%2F%3E%3Ccircle%20cx%3D%27310.4%27%20cy%3D%27266.4%27%20r%3D%273.14%27%20fill-opacity%3D%270.46%27%2F%3E%3Ccircle%20cx%3D%27265.8%27%20cy%3D%27286.1%27%20r%3D%270.87%27%20fill-opacity%3D%270.79%27%2F%3E%3Ccircle%20cx%3D%2771.7%27%20cy%3D%2776.2%27%20r%3D%273.35%27%20fill-opacity%3D%270.68%27%2F%3E%3Ccircle%20cx%3D%27261.6%27%20cy%3D%27223.3%27%20r%3D%270.81%27%20fill-opacity%3D%270.26%27%2F%3E%3Ccircle%20cx%3D%27199.8%27%20cy%3D%2729.3%27%20r%3D%271.34%27%20fill-opacity%3D%270.48%27%2F%3E%3Ccircle%20cx%3D%27238.8%27%20cy%3D%27294.3%27%20r%3D%270.73%27%20fill-opacity%3D%270.76%27%2F%3E%3Ccircle%20cx%3D%27183.5%27%20cy%3D%27305.4%27%20r%3D%270.95%27%20fill-opacity%3D%270.30%27%2F%3E%3Ccircle%20cx%3D%2741.8%27%20cy%3D%27239.8%27%20r%3D%270.70%27%20fill-opacity%3D%270.73%27%2F%3E%3Ccircle%20cx%3D%27132.6%27%20cy%3D%27130.3%27%20r%3D%271.02%27%20fill-opacity%3D%270.45%27%2F%3E%3Ccircle%20cx%3D%27280.4%27%20cy%3D%2750.7%27%20r%3D%270.61%27%20fill-opacity%3D%270.51%27%2F%3E%3Ccircle%20cx%3D%2791.4%27%20cy%3D%2776.7%27%20r%3D%270.78%27%20fill-opacity%3D%270.43%27%2F%3E%3Ccircle%20cx%3D%274.4%27%20cy%3D%27133.4%27%20r%3D%270.86%27%20fill-opacity%3D%270.77%27%2F%3E%3Ccircle%20cx%3D%27313.0%27%20cy%3D%27219.7%27%20r%3D%270.68%27%20fill-opacity%3D%270.56%27%2F%3E%3Ccircle%20cx%3D%2745.5%27%20cy%3D%27168.2%27%20r%3D%270.65%27%20fill-opacity%3D%270.72%27%2F%3E%3Ccircle%20cx%3D%27197.7%27%20cy%3D%27295.4%27%20r%3D%271.01%27%20fill-opacity%3D%270.76%27%2F%3E%3Ccircle%20cx%3D%2710.6%27%20cy%3D%2784.1%27%20r%3D%271.48%27%20fill-opacity%3D%270.38%27%2F%3E%3Ccircle%20cx%3D%27127.8%27%20cy%3D%2785.1%27%20r%3D%270.54%27%20fill-opacity%3D%270.65%27%2F%3E%3Ccircle%20cx%3D%27269.8%27%20cy%3D%27156.1%27%20r%3D%271.11%27%20fill-opacity%3D%270.59%27%2F%3E%3Ccircle%20cx%3D%2757.4%27%20cy%3D%2737.2%27%20r%3D%270.91%27%20fill-opacity%3D%270.40%27%2F%3E%3Ccircle%20cx%3D%27303.6%27%20cy%3D%27293.3%27%20r%3D%270.99%27%20fill-opacity%3D%270.54%27%2F%3E%3Ccircle%20cx%3D%27289.0%27%20cy%3D%2724.9%27%20r%3D%273.17%27%20fill-opacity%3D%270.55%27%2F%3E%3Ccircle%20cx%3D%2715.3%27%20cy%3D%27109.2%27%20r%3D%270.41%27%20fill-opacity%3D%270.66%27%2F%3E%3Ccircle%20cx%3D%27150.1%27%20cy%3D%2763.3%27%20r%3D%273.2%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%27147.8%27%20cy%3D%2755.8%27%20r%3D%270.97%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%27156.5%27%20cy%3D%2769.4%27%20r%3D%270.65%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%27154.5%27%20cy%3D%2754.7%27%20r%3D%270.94%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%27143.2%27%20cy%3D%2766.3%27%20r%3D%271.14%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%27148.2%27%20cy%3D%2747.6%27%20r%3D%270.78%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%27139.7%27%20cy%3D%2764.6%27%20r%3D%271.02%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%2794.2%27%20cy%3D%27128.8%27%20r%3D%273.2%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%2786.1%27%20cy%3D%27124.0%27%20r%3D%270.76%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%2794.0%27%20cy%3D%27134.6%27%20r%3D%270.44%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%2784.0%27%20cy%3D%27122.8%27%20r%3D%270.53%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%2785.0%27%20cy%3D%27128.9%27%20r%3D%270.53%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%2784.0%27%20cy%3D%27123.2%27%20r%3D%270.48%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%2793.4%27%20cy%3D%27135.4%27%20r%3D%270.54%27%20fill-opacity%3D%27.5%27%2F%3E%3C%2Fsvg%3E");
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .2 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --streak: rgba(21, 18, 14, 0.05);
+  --misreg: rgba(44, 122, 115, 0.55);
 
   --f-display: 'Anton', 'Impact', 'Arial Narrow', sans-serif;
   --f-type: 'Special Elite', 'Courier New', monospace;
@@ -32,6 +36,10 @@
     --dot: rgba(239, 230, 209, 0.06);
     --shadow: #000;
     --on-red: #f6efdf;
+    --specks: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27320%27%20height%3D%27320%27%20fill%3D%27%23efe6d1%27%3E%3Ccircle%20cx%3D%27319.1%27%20cy%3D%27123.9%27%20r%3D%271.50%27%20fill-opacity%3D%270.49%27%2F%3E%3Ccircle%20cx%3D%2740.1%27%20cy%3D%2776.7%27%20r%3D%271.32%27%20fill-opacity%3D%270.28%27%2F%3E%3Ccircle%20cx%3D%27128.7%27%20cy%3D%27298.0%27%20r%3D%272.58%27%20fill-opacity%3D%270.72%27%2F%3E%3Ccircle%20cx%3D%27103.6%27%20cy%3D%27228.0%27%20r%3D%271.15%27%20fill-opacity%3D%270.72%27%2F%3E%3Ccircle%20cx%3D%2728.5%27%20cy%3D%27133.0%27%20r%3D%271.29%27%20fill-opacity%3D%270.55%27%2F%3E%3Ccircle%20cx%3D%27295.9%27%20cy%3D%2781.5%27%20r%3D%271.01%27%20fill-opacity%3D%270.64%27%2F%3E%3Ccircle%20cx%3D%27253.1%27%20cy%3D%27209.1%27%20r%3D%270.81%27%20fill-opacity%3D%270.67%27%2F%3E%3Ccircle%20cx%3D%2742.8%27%20cy%3D%27180.2%27%20r%3D%270.66%27%20fill-opacity%3D%270.46%27%2F%3E%3Ccircle%20cx%3D%2793.0%27%20cy%3D%27185.2%27%20r%3D%271.23%27%20fill-opacity%3D%270.32%27%2F%3E%3Ccircle%20cx%3D%27115.2%27%20cy%3D%2727.8%27%20r%3D%270.63%27%20fill-opacity%3D%270.79%27%2F%3E%3Ccircle%20cx%3D%27139.4%27%20cy%3D%27289.0%27%20r%3D%273.40%27%20fill-opacity%3D%270.61%27%2F%3E%3Ccircle%20cx%3D%27191.6%27%20cy%3D%27177.3%27%20r%3D%270.63%27%20fill-opacity%3D%270.76%27%2F%3E%3Ccircle%20cx%3D%27313.0%27%20cy%3D%27174.4%27%20r%3D%270.90%27%20fill-opacity%3D%270.52%27%2F%3E%3Ccircle%20cx%3D%2777.9%27%20cy%3D%27308.0%27%20r%3D%270.72%27%20fill-opacity%3D%270.44%27%2F%3E%3Ccircle%20cx%3D%2797.6%27%20cy%3D%27188.5%27%20r%3D%271.01%27%20fill-opacity%3D%270.47%27%2F%3E%3Ccircle%20cx%3D%27160.1%27%20cy%3D%27260.2%27%20r%3D%271.45%27%20fill-opacity%3D%270.54%27%2F%3E%3Ccircle%20cx%3D%27306.7%27%20cy%3D%27171.9%27%20r%3D%272.73%27%20fill-opacity%3D%270.56%27%2F%3E%3Ccircle%20cx%3D%27317.4%27%20cy%3D%2745.6%27%20r%3D%270.71%27%20fill-opacity%3D%270.79%27%2F%3E%3Ccircle%20cx%3D%27113.5%27%20cy%3D%27136.3%27%20r%3D%271.07%27%20fill-opacity%3D%270.52%27%2F%3E%3Ccircle%20cx%3D%27103.8%27%20cy%3D%27246.4%27%20r%3D%270.87%27%20fill-opacity%3D%270.28%27%2F%3E%3Ccircle%20cx%3D%27302.5%27%20cy%3D%27275.8%27%20r%3D%271.02%27%20fill-opacity%3D%270.26%27%2F%3E%3Ccircle%20cx%3D%2778.0%27%20cy%3D%2781.0%27%20r%3D%270.50%27%20fill-opacity%3D%270.49%27%2F%3E%3Ccircle%20cx%3D%27262.5%27%20cy%3D%27256.8%27%20r%3D%271.25%27%20fill-opacity%3D%270.64%27%2F%3E%3Ccircle%20cx%3D%2738.9%27%20cy%3D%27173.0%27%20r%3D%270.73%27%20fill-opacity%3D%270.62%27%2F%3E%3Ccircle%20cx%3D%2790.9%27%20cy%3D%27193.2%27%20r%3D%274.04%27%20fill-opacity%3D%270.50%27%2F%3E%3Ccircle%20cx%3D%27313.1%27%20cy%3D%27286.7%27%20r%3D%273.44%27%20fill-opacity%3D%270.29%27%2F%3E%3Ccircle%20cx%3D%2788.1%27%20cy%3D%2737.3%27%20r%3D%273.72%27%20fill-opacity%3D%270.52%27%2F%3E%3Ccircle%20cx%3D%27238.4%27%20cy%3D%27278.2%27%20r%3D%272.24%27%20fill-opacity%3D%270.60%27%2F%3E%3Ccircle%20cx%3D%27273.0%27%20cy%3D%2712.8%27%20r%3D%270.49%27%20fill-opacity%3D%270.30%27%2F%3E%3Ccircle%20cx%3D%2773.1%27%20cy%3D%27201.1%27%20r%3D%270.96%27%20fill-opacity%3D%270.78%27%2F%3E%3Ccircle%20cx%3D%27160.0%27%20cy%3D%27146.2%27%20r%3D%271.28%27%20fill-opacity%3D%270.50%27%2F%3E%3Ccircle%20cx%3D%27122.5%27%20cy%3D%27236.5%27%20r%3D%270.80%27%20fill-opacity%3D%270.27%27%2F%3E%3Ccircle%20cx%3D%27154.5%27%20cy%3D%274.1%27%20r%3D%270.74%27%20fill-opacity%3D%270.45%27%2F%3E%3Ccircle%20cx%3D%2770.5%27%20cy%3D%27244.9%27%20r%3D%273.61%27%20fill-opacity%3D%270.34%27%2F%3E%3Ccircle%20cx%3D%2770.1%27%20cy%3D%27157.3%27%20r%3D%273.2%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%2779.1%27%20cy%3D%27161.3%27%20r%3D%270.54%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%2755.2%27%20cy%3D%27159.3%27%20r%3D%270.65%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%2778.1%27%20cy%3D%27158.3%27%20r%3D%270.85%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%2779.4%27%20cy%3D%27167.4%27%20r%3D%270.98%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%2761.5%27%20cy%3D%27158.3%27%20r%3D%270.61%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%2771.1%27%20cy%3D%27170.3%27%20r%3D%270.53%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%27241.2%27%20cy%3D%27120.3%27%20r%3D%273.2%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%27228.8%27%20cy%3D%27120.9%27%20r%3D%270.90%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%27236.2%27%20cy%3D%27115.9%27%20r%3D%270.59%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%27235.7%27%20cy%3D%27124.3%27%20r%3D%270.97%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%27246.6%27%20cy%3D%27114.4%27%20r%3D%270.70%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%27244.4%27%20cy%3D%27114.2%27%20r%3D%271.10%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%27232.2%27%20cy%3D%27124.9%27%20r%3D%271.27%27%20fill-opacity%3D%27.5%27%2F%3E%3C%2Fsvg%3E");
+    --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .14 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    --streak: rgba(239, 230, 209, 0.035);
+    --misreg: rgba(209, 40, 28, 0.6);
     color-scheme: dark;
   }
 }
@@ -44,6 +52,10 @@
   --dot: rgba(239, 230, 209, 0.06);
   --shadow: #000;
   --on-red: #f6efdf;
+  --specks: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27320%27%20height%3D%27320%27%20fill%3D%27%23efe6d1%27%3E%3Ccircle%20cx%3D%27319.1%27%20cy%3D%27123.9%27%20r%3D%271.50%27%20fill-opacity%3D%270.49%27%2F%3E%3Ccircle%20cx%3D%2740.1%27%20cy%3D%2776.7%27%20r%3D%271.32%27%20fill-opacity%3D%270.28%27%2F%3E%3Ccircle%20cx%3D%27128.7%27%20cy%3D%27298.0%27%20r%3D%272.58%27%20fill-opacity%3D%270.72%27%2F%3E%3Ccircle%20cx%3D%27103.6%27%20cy%3D%27228.0%27%20r%3D%271.15%27%20fill-opacity%3D%270.72%27%2F%3E%3Ccircle%20cx%3D%2728.5%27%20cy%3D%27133.0%27%20r%3D%271.29%27%20fill-opacity%3D%270.55%27%2F%3E%3Ccircle%20cx%3D%27295.9%27%20cy%3D%2781.5%27%20r%3D%271.01%27%20fill-opacity%3D%270.64%27%2F%3E%3Ccircle%20cx%3D%27253.1%27%20cy%3D%27209.1%27%20r%3D%270.81%27%20fill-opacity%3D%270.67%27%2F%3E%3Ccircle%20cx%3D%2742.8%27%20cy%3D%27180.2%27%20r%3D%270.66%27%20fill-opacity%3D%270.46%27%2F%3E%3Ccircle%20cx%3D%2793.0%27%20cy%3D%27185.2%27%20r%3D%271.23%27%20fill-opacity%3D%270.32%27%2F%3E%3Ccircle%20cx%3D%27115.2%27%20cy%3D%2727.8%27%20r%3D%270.63%27%20fill-opacity%3D%270.79%27%2F%3E%3Ccircle%20cx%3D%27139.4%27%20cy%3D%27289.0%27%20r%3D%273.40%27%20fill-opacity%3D%270.61%27%2F%3E%3Ccircle%20cx%3D%27191.6%27%20cy%3D%27177.3%27%20r%3D%270.63%27%20fill-opacity%3D%270.76%27%2F%3E%3Ccircle%20cx%3D%27313.0%27%20cy%3D%27174.4%27%20r%3D%270.90%27%20fill-opacity%3D%270.52%27%2F%3E%3Ccircle%20cx%3D%2777.9%27%20cy%3D%27308.0%27%20r%3D%270.72%27%20fill-opacity%3D%270.44%27%2F%3E%3Ccircle%20cx%3D%2797.6%27%20cy%3D%27188.5%27%20r%3D%271.01%27%20fill-opacity%3D%270.47%27%2F%3E%3Ccircle%20cx%3D%27160.1%27%20cy%3D%27260.2%27%20r%3D%271.45%27%20fill-opacity%3D%270.54%27%2F%3E%3Ccircle%20cx%3D%27306.7%27%20cy%3D%27171.9%27%20r%3D%272.73%27%20fill-opacity%3D%270.56%27%2F%3E%3Ccircle%20cx%3D%27317.4%27%20cy%3D%2745.6%27%20r%3D%270.71%27%20fill-opacity%3D%270.79%27%2F%3E%3Ccircle%20cx%3D%27113.5%27%20cy%3D%27136.3%27%20r%3D%271.07%27%20fill-opacity%3D%270.52%27%2F%3E%3Ccircle%20cx%3D%27103.8%27%20cy%3D%27246.4%27%20r%3D%270.87%27%20fill-opacity%3D%270.28%27%2F%3E%3Ccircle%20cx%3D%27302.5%27%20cy%3D%27275.8%27%20r%3D%271.02%27%20fill-opacity%3D%270.26%27%2F%3E%3Ccircle%20cx%3D%2778.0%27%20cy%3D%2781.0%27%20r%3D%270.50%27%20fill-opacity%3D%270.49%27%2F%3E%3Ccircle%20cx%3D%27262.5%27%20cy%3D%27256.8%27%20r%3D%271.25%27%20fill-opacity%3D%270.64%27%2F%3E%3Ccircle%20cx%3D%2738.9%27%20cy%3D%27173.0%27%20r%3D%270.73%27%20fill-opacity%3D%270.62%27%2F%3E%3Ccircle%20cx%3D%2790.9%27%20cy%3D%27193.2%27%20r%3D%274.04%27%20fill-opacity%3D%270.50%27%2F%3E%3Ccircle%20cx%3D%27313.1%27%20cy%3D%27286.7%27%20r%3D%273.44%27%20fill-opacity%3D%270.29%27%2F%3E%3Ccircle%20cx%3D%2788.1%27%20cy%3D%2737.3%27%20r%3D%273.72%27%20fill-opacity%3D%270.52%27%2F%3E%3Ccircle%20cx%3D%27238.4%27%20cy%3D%27278.2%27%20r%3D%272.24%27%20fill-opacity%3D%270.60%27%2F%3E%3Ccircle%20cx%3D%27273.0%27%20cy%3D%2712.8%27%20r%3D%270.49%27%20fill-opacity%3D%270.30%27%2F%3E%3Ccircle%20cx%3D%2773.1%27%20cy%3D%27201.1%27%20r%3D%270.96%27%20fill-opacity%3D%270.78%27%2F%3E%3Ccircle%20cx%3D%27160.0%27%20cy%3D%27146.2%27%20r%3D%271.28%27%20fill-opacity%3D%270.50%27%2F%3E%3Ccircle%20cx%3D%27122.5%27%20cy%3D%27236.5%27%20r%3D%270.80%27%20fill-opacity%3D%270.27%27%2F%3E%3Ccircle%20cx%3D%27154.5%27%20cy%3D%274.1%27%20r%3D%270.74%27%20fill-opacity%3D%270.45%27%2F%3E%3Ccircle%20cx%3D%2770.5%27%20cy%3D%27244.9%27%20r%3D%273.61%27%20fill-opacity%3D%270.34%27%2F%3E%3Ccircle%20cx%3D%2770.1%27%20cy%3D%27157.3%27%20r%3D%273.2%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%2779.1%27%20cy%3D%27161.3%27%20r%3D%270.54%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%2755.2%27%20cy%3D%27159.3%27%20r%3D%270.65%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%2778.1%27%20cy%3D%27158.3%27%20r%3D%270.85%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%2779.4%27%20cy%3D%27167.4%27%20r%3D%270.98%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%2761.5%27%20cy%3D%27158.3%27%20r%3D%270.61%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%2771.1%27%20cy%3D%27170.3%27%20r%3D%270.53%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%27241.2%27%20cy%3D%27120.3%27%20r%3D%273.2%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%27228.8%27%20cy%3D%27120.9%27%20r%3D%270.90%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%27236.2%27%20cy%3D%27115.9%27%20r%3D%270.59%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%27235.7%27%20cy%3D%27124.3%27%20r%3D%270.97%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%27246.6%27%20cy%3D%27114.4%27%20r%3D%270.70%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%27244.4%27%20cy%3D%27114.2%27%20r%3D%271.10%27%20fill-opacity%3D%27.5%27%2F%3E%3Ccircle%20cx%3D%27232.2%27%20cy%3D%27124.9%27%20r%3D%271.27%27%20fill-opacity%3D%27.5%27%2F%3E%3C%2Fsvg%3E");
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .14 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --streak: rgba(239, 230, 209, 0.035);
+  --misreg: rgba(209, 40, 28, 0.6);
   color-scheme: dark;
 }
 
@@ -83,6 +95,22 @@ input {
 :focus-visible {
   outline: 3px dashed var(--red);
   outline-offset: 3px;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    var(--specks),
+    var(--specks),
+    var(--grain),
+    repeating-linear-gradient(90deg, transparent 0 173px, var(--streak) 173px 175px, transparent 175px 389px, var(--streak) 389px 390px, transparent 390px 521px),
+    repeating-linear-gradient(0deg, transparent 0 61px, var(--streak) 61px 62px, transparent 62px 233px);
+  background-size: 320px 320px, 517px 517px, 180px 180px, auto, auto;
+  background-position: 0 0, 143px 211px, 0 0, 0 0, 0 0;
 }
 
 .ico {
@@ -148,7 +176,6 @@ input {
   width: 30px;
   height: 30px;
   color: var(--mustard);
-  transform: rotate(-6deg);
 }
 .logo-text {
   font-family: var(--f-display);
@@ -189,19 +216,21 @@ input {
   width: 44px;
   height: 44px;
   color: var(--paper);
+  opacity: 0.62;
   border: 2px solid transparent;
   text-decoration: none;
-  transition: transform 0.12s;
+  transition: transform 0.12s, opacity 0.12s;
 }
 .nav a:hover {
-  transform: rotate(-4deg) scale(1.06);
+  opacity: 1;
+  transform: translateY(-2px);
   color: var(--mustard);
 }
 .nav a[aria-current='page'] {
   background: var(--mustard);
   color: var(--ink);
   border-color: var(--ink);
-  transform: rotate(-3deg);
+  opacity: 1;
 }
 .top .btn-ghost {
   color: var(--paper);
@@ -218,7 +247,7 @@ main {
     position: fixed;
     bottom: 12px;
     left: 50%;
-    transform: translateX(-50%) rotate(-1deg);
+    transform: translateX(-50%);
     background: var(--ink);
     padding: 6px 10px;
     border: var(--b) solid var(--ink);
@@ -253,7 +282,7 @@ main {
   text-decoration: none;
 }
 .btn:hover {
-  transform: translate(-1px, -1px) rotate(-1deg);
+  transform: translate(-2px, -2px);
   box-shadow: 6px 6px 0 var(--shadow);
 }
 .btn:active {
@@ -329,6 +358,7 @@ main {
   line-height: 0.92;
   margin: 0;
   letter-spacing: 0.01em;
+  text-shadow: 3px 2px 0 var(--misreg);
 }
 .headline .hl {
   background: var(--ink);

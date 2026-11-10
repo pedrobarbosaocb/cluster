@@ -24,9 +24,8 @@
   text-transform: uppercase;
   font-size: 17px;
 }
-.steps li:nth-child(1) { transform: rotate(-2deg); }
-.steps li:nth-child(2) { transform: rotate(1.5deg); background: var(--mustard); color: #15120e; }
-.steps li:nth-child(3) { transform: rotate(-1deg); background: var(--red); color: var(--on-red); }
+.steps li:nth-child(2) { background: var(--mustard); color: #15120e; }
+.steps li:nth-child(3) { background: var(--red); color: var(--on-red); }
 
 .create {
   display: flex;
@@ -36,7 +35,6 @@
   border: var(--b) solid var(--ink);
   box-shadow: 6px 6px 0 var(--shadow);
   width: min(520px, 100%);
-  transform: rotate(-0.6deg);
 }
 .field {
   flex: 1;
@@ -70,11 +68,11 @@
   text-decoration: none;
   border: var(--b) solid var(--ink);
   box-shadow: 5px 5px 0 var(--shadow);
-  transform: rotate(var(--tilt, 0deg));
-  transition: transform 0.12s;
+  transition: transform 0.12s, box-shadow 0.12s;
 }
 .board-card:hover {
-  transform: rotate(0deg) scale(1.03);
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 var(--shadow);
 }
 .board-card:nth-child(3n + 2) { background: var(--mustard); color: #15120e; }
 .board-card:nth-child(5n + 3) { background: var(--ink); color: var(--paper); }
@@ -112,8 +110,8 @@
   background: var(--ink);
   color: var(--paper);
   padding: 4px 14px 6px;
-  transform: rotate(-1.5deg);
   box-shadow: 6px 6px 0 var(--red);
+  text-shadow: 2px 2px 0 var(--misreg);
   overflow-wrap: anywhere;
 }
 
@@ -125,9 +123,11 @@
   gap: 10px;
   min-height: 240px;
   border: 4px dashed var(--ink);
-  background: var(--paper);
+  background-color: var(--paper);
+  background-image: radial-gradient(var(--dot) 1.2px, transparent 1.7px);
+  background-size: 6px 6px;
   cursor: pointer;
-  transition: transform 0.12s, background 0.12s;
+  transition: background-color 0.12s;
   text-align: center;
   padding: 24px;
 }
@@ -135,7 +135,6 @@
 .dropzone.over {
   background: var(--mustard);
   color: #15120e;
-  transform: rotate(-0.8deg) scale(1.01);
 }
 .dropzone .ico.big {
   width: 84px;
@@ -168,8 +167,6 @@
   border: 2px solid var(--ink);
   overflow: hidden;
 }
-.up-tile:nth-child(odd) { transform: rotate(-1.5deg); }
-.up-tile:nth-child(even) { transform: rotate(1deg); }
 .up-tile img { width: 100%; height: 100%; object-fit: cover; }
 .up-tile[data-state='error'] { background: var(--red); }
 .up-tile .swatches { position: absolute; left: 0; right: 0; bottom: 0; }
@@ -217,12 +214,11 @@
   display: block;
   pointer-events: none;
 }
-.card.ghost { opacity: 0.85; filter: grayscale(0.6) contrast(0.9); }
-.card.ghost.g1 { transform: rotate(4deg) translate(14px, 6px); }
-.card.ghost.g2 { transform: rotate(-5deg) translate(-16px, 10px); }
+.card.ghost img { visibility: hidden; }
+.card.ghost.g1 { transform: translate(16px, 16px); }
+.card.ghost.g2 { transform: translate(8px, 8px); }
 .card.live {
   cursor: grab;
-  transform: rotate(-1deg);
   transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
   animation: deal 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -230,11 +226,11 @@
 .card.live.skipping { opacity: 0.6; }
 .card.live.thrown {
   transition: transform 0.26s ease-in, opacity 0.26s ease-in;
-  transform: translate(var(--tx, 0), var(--ty, 300px)) scale(0.15) rotate(18deg) !important;
+  transform: translate(var(--tx, 0), var(--ty, 300px)) scale(0.15) !important;
   opacity: 0;
 }
 @keyframes deal {
-  from { transform: translateY(40px) rotate(6deg) scale(0.92); opacity: 0; }
+  from { transform: translateY(24px) scale(0.96); opacity: 0; }
 }
 .card-prev {
   position: absolute;
@@ -242,7 +238,6 @@
   right: -18px;
   width: 52px;
   height: 52px;
-  transform: rotate(12deg);
 }
 
 .hand {
@@ -263,33 +258,47 @@
   border-radius: 50%;
   box-shadow: 4px 4px 0 var(--shadow);
   cursor: pointer;
-  transition: transform 0.12s cubic-bezier(0.22, 1, 0.36, 1), background 0.12s;
+  transition: transform 0.12s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.12s, filter 0.12s;
 }
-.token:nth-child(odd) { transform: rotate(-4deg); }
-.token:nth-child(even) { transform: rotate(3deg); }
+.token-rotten { background: #bdb69a; }
+.token-tomato { background: #f6efdf; }
+.token-zine { background: #2c7a73; }
+.token-vinyl { background: #efb21f; }
+.token-crown { background: #d1281c; }
 .token:hover,
+.token:focus-visible,
 .token.armed {
-  transform: translateY(-10px) scale(1.12) rotate(0deg);
-  background: var(--mustard);
+  transform: translateY(-10px) scale(1.1);
+  outline: 4px solid var(--ink);
+  outline-offset: 4px;
+}
+.token.chosen {
+  outline: 4px dashed var(--ink);
+  outline-offset: 4px;
+}
+.hand.aiming .token:not(.armed) {
+  opacity: 0.35;
+  filter: grayscale(0.7);
 }
 .token.hit { animation: hit 0.38s; }
 @keyframes hit {
-  40% { transform: scale(1.35) rotate(-8deg); background: var(--red); }
+  40% { transform: scale(1.3); }
 }
 .token-art { display: block; width: 100%; height: 100%; }
 .token-art svg { width: 100%; height: 100%; display: block; }
 .token-val {
   position: absolute;
-  bottom: -8px;
-  right: -6px;
-  min-width: 26px;
-  padding: 0 5px;
+  bottom: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 28px;
+  padding: 0 6px;
   background: var(--ink);
   color: var(--paper);
   font-family: var(--f-display);
-  font-size: 15px;
+  font-size: 18px;
+  line-height: 1.3;
   text-align: center;
-  transform: rotate(-6deg);
 }
 
 .vote-tools {
@@ -313,7 +322,6 @@
   padding: 10px 0 40px;
 }
 .cluster {
-  transform: rotate(var(--tilt));
   animation: deal 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
   max-width: 100%;
 }
@@ -341,7 +349,6 @@
   border: 2px solid var(--ink);
   background: var(--paper-2);
   cursor: zoom-in;
-  transform: rotate(var(--r));
   transition: transform 0.15s, box-shadow 0.15s;
   animation: deal 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
   animation-delay: var(--d);
@@ -349,7 +356,7 @@
 }
 .piece:hover,
 .piece:focus-visible {
-  transform: rotate(0deg) scale(1.04);
+  transform: translate(-2px, -2px);
   box-shadow: 6px 6px 0 var(--shadow);
   z-index: 3;
 }
@@ -418,3 +425,4 @@
 .lb-token .token-art { width: 34px; height: 34px; }
 .lb-bar .swatches { width: 120px; height: 18px; border: 2px solid var(--ink); margin-left: auto; }
 .done .stamp { font-size: 30px; margin: 0; }
+.hand { margin-top: 34px; }

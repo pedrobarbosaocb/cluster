@@ -94,10 +94,11 @@ export async function voteView(root: HTMLElement, { id }: Record<string, string>
     hand.hidden = false;
     tools.hidden = false;
     // cartas de trás (só visual)
-    queue.slice(1, 3).reverse().forEach((n, i) => {
-      stage.append(h('div', { class: `card ghost g${2 - i}` }, h('img', { src: n.thumbUrl, alt: '' })));
-    });
+    // pilha alinhada: cartas de trás com o mesmo tamanho da atual
+    const behind = Math.min(2, queue.length - 1);
+    for (let i = behind; i >= 1; i--) stage.append(h('div', { class: `card ghost g${i}`, 'aria-hidden': 'true' }, h('img', { src: img.url, alt: '' })));
     const prev = mine.get(img.id);
+    for (const [v, b] of tokenEls) b.classList.toggle('chosen', v === prev);
     card = h(
       'div',
       { class: 'card live', tabindex: 0, 'aria-label': 'imagem atual' },
@@ -178,12 +179,13 @@ export async function voteView(root: HTMLElement, { id }: Record<string, string>
       sy = e.clientY;
       el.setPointerCapture(e.pointerId);
       el.classList.add('dragging');
+      hand.classList.add('aiming');
     });
     el.addEventListener('pointermove', (e) => {
       if (!dragging) return;
       const dx = e.clientX - sx;
       const dy = e.clientY - sy;
-      el.style.transform = `translate(${dx}px, ${dy}px) rotate(${dx / 14}deg)`;
+      el.style.transform = `translate(${dx}px, ${dy}px) rotate(${dx / 40}deg)`;
       const v = tokenAt(e.clientX, e.clientY);
       if (v !== over) {
         if (over !== null) tokenEls.get(over)?.classList.remove('armed');
@@ -196,6 +198,7 @@ export async function voteView(root: HTMLElement, { id }: Record<string, string>
       if (!dragging) return;
       dragging = false;
       el.classList.remove('dragging', 'skipping');
+      hand.classList.remove('aiming');
       const dx = e.clientX - sx;
       const v = over;
       if (over !== null) tokenEls.get(over)?.classList.remove('armed');
