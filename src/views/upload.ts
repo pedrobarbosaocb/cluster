@@ -1,14 +1,14 @@
 import { api } from '../data/api.ts';
 import { ACCEPT, processImage } from '../media/process.ts';
 import { h, icon, toast } from '../ui/dom.ts';
-import { boardHeader, notFound } from './common.ts';
+import { boardHeader, loadBoard } from './common.ts';
 
 const CONCURRENCY = 2;
 
 export async function uploadView(root: HTMLElement, { id }: Record<string, string>): Promise<() => void> {
   const a = await api();
-  const state = await a.getBoard(id!);
-  if (!state) return notFound(root);
+  const state = await loadBoard(root, a, id!);
+  if (!state) return () => {};
 
   let alive = true;
   const counter = h('span', { class: 'chip', title: 'imagens no board' }, icon('image'), String(state.images.length));

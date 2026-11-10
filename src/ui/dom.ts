@@ -26,6 +26,40 @@ export function iconBtn(name: IconName, label: string, onclick: EventListener, c
   return h('button', { class: `btn btn-icon ${cls}`.trim(), type: 'button', 'aria-label': label, title: label, onclick }, icon(name));
 }
 
+/**
+ * Botão de ação destrutiva em dois toques: o 1º arma (fica vermelho e troca
+ * para ✓), o 2º confirma. Desarma sozinho depois de 3 s. Sem pop-up do navegador.
+ */
+export function confirmBtn(name: IconName, label: string, action: () => void | Promise<void>, cls = ''): HTMLButtonElement {
+  let timer = 0;
+  const disarm = (): void => {
+    b.classList.remove('armed');
+    b.replaceChildren(icon(name));
+    b.setAttribute('aria-label', label);
+    b.title = label;
+  };
+  const b = iconBtn(name, label, async (e) => {
+    e.stopPropagation();
+    if (!b.classList.contains('armed')) {
+      b.classList.add('armed');
+      b.replaceChildren(icon('check'));
+      b.setAttribute('aria-label', 'Confirmar');
+      b.title = 'Confirmar';
+      timer = window.setTimeout(disarm, 3000);
+      return;
+    }
+    clearTimeout(timer);
+    b.disabled = true;
+    try {
+      await action();
+    } finally {
+      b.disabled = false;
+      disarm();
+    }
+  }, cls);
+  return b;
+}
+
 let toastTimer = 0;
 /** Aviso curto estilo carimbo. */
 export function toast(iconName: IconName, text = ''): void {

@@ -5,6 +5,9 @@ services:
       - "8787:8787"
     volumes:
       - moodboard-data:/data
+    environment:
+      # chave mestra de dono (opcional): gere com  openssl rand -base64 24
+      ADMIN_TOKEN: ${ADMIN_TOKEN:-}
     restart: unless-stopped
 volumes:
   moodboard-data:

@@ -73,4 +73,39 @@ export class LocalApi implements Api {
     await wrap((await this.store('votes', 'readwrite')).put({ ...v, boardId }));
     return v;
   }
+
+  // Modo local: o dispositivo é o dono de tudo; PIN não se aplica.
+  readonly supportsPin = false;
+
+  async unlock(): Promise<boolean> {
+    return true;
+  }
+
+  isOwner(): boolean {
+    return true;
+  }
+
+  ownerKey(): string | null {
+    return null;
+  }
+
+  async claimOwner(): Promise<boolean> {
+    return true;
+  }
+
+  async deleteImage(boardId: string, imageId: string): Promise<void> {
+    const tx = (await this.db).transaction(['images', 'votes'], 'readwrite');
+    tx.objectStore('images').delete(imageId);
+    const votes = tx.objectStore('votes');
+    const mine = await wrap(votes.index('boardId').getAll(boardId) as IDBRequest<Vote[]>);
+    for (const v of mine) if (v.imageId === imageId) votes.delete([v.imageId, v.voterId]);
+    await new Promise<void>((resolve, reject) => {
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error);
+    });
+  }
+
+  async setPin(): Promise<Board> {
+    throw new Error('PIN não existe no modo local');
+  }
 }

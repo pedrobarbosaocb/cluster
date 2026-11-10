@@ -5,7 +5,7 @@ import { api } from '../data/api.ts';
 import { voterId } from '../data/identity.ts';
 import { h, icon, iconBtn, toast } from '../ui/dom.ts';
 import { tokenArt } from '../ui/icons.ts';
-import { boardHeader, notFound } from './common.ts';
+import { boardHeader, loadBoard } from './common.ts';
 
 const hash = (s: string): number => [...s].reduce((a, c) => (Math.imul(a, 31) + c.charCodeAt(0)) | 0, 7);
 
@@ -21,8 +21,8 @@ function shuffle<T>(arr: T[], seed: number): T[] {
 
 export async function voteView(root: HTMLElement, { id }: Record<string, string>): Promise<() => void> {
   const a = await api();
-  const state = await a.getBoard(id!);
-  if (!state) return notFound(root);
+  const state = await loadBoard(root, a, id!);
+  if (!state) return () => {};
   const me = voterId();
 
   const mine = new Map(state.votes.filter((v) => v.voterId === me).map((v) => [v.imageId, v.value]));
