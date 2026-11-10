@@ -223,8 +223,8 @@
 .card.live {
   cursor: grab;
   transform: rotate(-1deg);
-  transition: transform 0.25s cubic-bezier(0.2, 1.4, 0.4, 1);
-  animation: deal 0.3s cubic-bezier(0.2, 1.4, 0.4, 1);
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: deal 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .card.live.dragging { cursor: grabbing; transition: none; }
 .card.live.skipping { opacity: 0.6; }
@@ -263,7 +263,7 @@
   border-radius: 50%;
   box-shadow: 4px 4px 0 var(--shadow);
   cursor: pointer;
-  transition: transform 0.12s cubic-bezier(0.2, 1.6, 0.4, 1), background 0.12s;
+  transition: transform 0.12s cubic-bezier(0.22, 1, 0.36, 1), background 0.12s;
 }
 .token:nth-child(odd) { transform: rotate(-4deg); }
 .token:nth-child(even) { transform: rotate(3deg); }
@@ -314,7 +314,7 @@
 }
 .cluster {
   transform: rotate(var(--tilt));
-  animation: deal 0.4s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+  animation: deal 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
   max-width: 100%;
 }
 .cluster-palette {
@@ -343,7 +343,7 @@
   cursor: zoom-in;
   transform: rotate(var(--r));
   transition: transform 0.15s, box-shadow 0.15s;
-  animation: deal 0.35s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+  animation: deal 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
   animation-delay: var(--d);
   overflow: hidden;
 }
