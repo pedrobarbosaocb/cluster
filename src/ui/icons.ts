@@ -26,6 +26,7 @@ export const icons = {
   drop: stroke('<path d="M12 3s7 7.5 7 12a7 7 0 0 1-14 0c0-4.5 7-12 7-12z"/>'),
   refresh: stroke('<path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/>'),
   arrowLeft: stroke('<path d="M20 12H4M10 6l-6 6 6 6"/>'),
+  download: stroke('<path d="M12 3v12M6.5 9.5 12 15l5.5-5.5"/><path d="M3 16v5h18v-5"/>'),
   bolt: stroke('<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>'),
   sun: stroke('<circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1"/>'),
   moon: stroke('<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>'),

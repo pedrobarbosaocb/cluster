@@ -426,3 +426,5 @@
 .lb-bar .swatches { width: 120px; height: 18px; border: 2px solid var(--ink); margin-left: auto; }
 .done .stamp { font-size: 30px; margin: 0; }
 .hand { margin-top: 34px; }
+
+.btn.busy .ico { animation: spin 1s linear infinite; }

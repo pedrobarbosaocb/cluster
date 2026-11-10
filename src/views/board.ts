@@ -2,7 +2,7 @@ import { buildMoodboard } from '../core/moodboard.ts';
 import type { BoardState, ImageRec } from '../core/types.ts';
 import { TOKENS } from '../core/votes.ts';
 import { api } from '../data/api.ts';
-import { h, icon, iconBtn } from '../ui/dom.ts';
+import { h, icon, iconBtn, toast } from '../ui/dom.ts';
 import { tokenArt } from '../ui/icons.ts';
 import { boardHeader, notFound } from './common.ts';
 
@@ -17,6 +17,9 @@ export async function boardView(root: HTMLElement, { id }: Record<string, string
   let zi = 3;
   let sig = '';
   const people = h('span', { class: 'chip', title: 'quem já votou' }, icon('people'), '0');
+  const setExportable = (n: number): void => {
+    exportBtn.disabled = n === 0;
+  };
   const canvas = h('div', { class: 'mood' });
   const zoomLabel = (): void => canvas.style.setProperty('--z', String(ZOOMS[zi]));
   const zoom = h(
@@ -35,7 +38,26 @@ export async function boardView(root: HTMLElement, { id }: Record<string, string
       zoomLabel();
     }),
   );
-  root.append(boardHeader(state.board.name, people), canvas, zoom);
+  const exportBtn = iconBtn('download', 'Baixar PNG', async () => {
+    if (!state?.images.length || exportBtn.disabled) return;
+    exportBtn.disabled = true;
+    exportBtn.classList.add('busy');
+    try {
+      const [{ renderBoardPng, download }, { slugFile }] = await Promise.all([
+        import('../media/export.ts'),
+        import('../core/arrange.ts'),
+      ]);
+      download(await renderBoardPng(state), slugFile(state.board.name));
+      toast('download', 'png pronto');
+    } catch (e) {
+      console.error(e);
+      toast('bolt', 'falhou');
+    } finally {
+      exportBtn.disabled = false;
+      exportBtn.classList.remove('busy');
+    }
+  });
+  root.append(boardHeader(state.board.name, people, exportBtn), canvas, zoom);
   zoomLabel();
 
   const render = (s: BoardState): void => {
@@ -44,6 +66,7 @@ export async function boardView(root: HTMLElement, { id }: Record<string, string
     sig = nextSig;
     const mb = buildMoodboard(s.images, s.votes);
     people.lastChild!.textContent = String(mb.voters);
+    setExportable(s.images.length);
 
     if (!s.images.length) {
       canvas.replaceChildren(
