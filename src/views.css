@@ -511,3 +511,17 @@
   height: 40px;
   box-shadow: 3px 3px 0 var(--shadow);
 }
+
+/* ───────────── tempo real ───────────── */
+
+.live-chip { opacity: 0.4; }
+.live-chip.on {
+  opacity: 1;
+  background: var(--mustard);
+  color: #15120e;
+  border-color: var(--ink);
+}
+.live-chip.on .ico { animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse {
+  50% { opacity: 0.35; }
+}

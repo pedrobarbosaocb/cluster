@@ -1,5 +1,6 @@
 import type { Board, BoardState, ImageRec, Vote } from '../core/types.ts';
-import { LockedError, type Api, type NewImage } from './api.ts';
+import { LockedError, type Api, type LiveHandlers, type NewImage } from './api.ts';
+import { SseParser, backoff } from './sse.ts';
 import { getCred, setCred } from './creds.ts';
 
 class HttpStatusError extends Error {
@@ -104,6 +105,53 @@ export class HttpApi implements Api {
 
   async deleteImage(boardId: string, imageId: string): Promise<void> {
     await this.req(`${this.b(boardId)}/images/${encodeURIComponent(imageId)}`, { method: 'DELETE' }, boardId);
+  }
+
+  /**
+   * SSE via fetch (o EventSource nativo não manda headers, e o PIN não deve ir na URL).
+   * Reconecta com espera progressiva; para de vez em 401 (PIN) ou 404.
+   */
+  subscribe(boardId: string, h: LiveHandlers): () => void {
+    const ac = new AbortController();
+    let attempt = 0;
+
+    const run = async (): Promise<void> => {
+      while (!ac.signal.aborted) {
+        try {
+          const headers: Record<string, string> = { accept: 'text/event-stream' };
+          const pin = getCred('pin', boardId);
+          const owner = getCred('owner', boardId);
+          if (pin) headers['x-board-pin'] = pin;
+          if (owner) headers['x-owner-key'] = owner;
+          const res = await fetch(`${this.base}${this.b(boardId)}/events`, { headers, signal: ac.signal });
+          if (res.status === 401) return void (h.onStatus?.(false), h.onLocked?.());
+          if (res.status === 404) return void h.onStatus?.(false);
+          if (!res.ok || !res.body) throw new Error(String(res.status));
+          attempt = 0;
+          h.onStatus?.(true);
+          const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
+          const parser = new SseParser();
+          for (;;) {
+            const { value, done } = await reader.read();
+            if (done) break;
+            for (const ev of parser.push(value)) {
+              if (ev.event !== 'change') continue;
+              try {
+                h.onChange((JSON.parse(ev.data) as { kind: string }).kind);
+              } catch {
+                h.onChange('unknown');
+              }
+            }
+          }
+        } catch {
+          if (ac.signal.aborted) return;
+        }
+        h.onStatus?.(false);
+        await new Promise((r) => setTimeout(r, backoff(attempt++)));
+      }
+    };
+    void run();
+    return () => ac.abort();
   }
 
   async setPin(boardId: string, pin: string | null): Promise<Board> {

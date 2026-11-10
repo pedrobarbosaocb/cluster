@@ -32,6 +32,14 @@ Arrastar a carta para a esquerda pula; `Z` desfaz. Cada dispositivo tem uma iden
 - Os arquivos de imagem (`/uploads/*`) não pedem PIN: os nomes são aleatórios e não aparecem sem acesso ao board, mas quem tiver o link direto de uma imagem consegue abri-la.
 - No modo GitHub Pages (local) não há PIN: os dados nem saem do navegador, e quem usa é sempre o dono.
 
+## Tempo real
+
+- O board e a votação se atualizam na hora (⚡ amarelo no cabeçalho = conectado): votos, uploads e exclusões de outras pessoas aparecem em menos de 1 s.
+- Funciona por Server-Sent Events em `GET /api/boards/<id>/events`, lido via `fetch` para mandar o PIN no header (nunca na URL). Reconecta sozinho (1 s → 15 s); se cair de vez, o board ainda recarrega a cada 60 s.
+- Na votação, imagens novas entram no fim da fila sem trocar a carta atual; apagadas saem da fila.
+- Trocar o PIN derruba as conexões abertas: quem está com o board aberto cai na tela de PIN.
+- No modo GitHub Pages, sincroniza só entre abas do mesmo navegador (`BroadcastChannel`).
+
 ## Como funciona o agrupamento
 
 1. **Paleta**: no upload, o navegador reduz a imagem e roda k-means++ no espaço de cor Lab → 5 cores dominantes com peso.
@@ -61,7 +69,7 @@ docker compose up -d --build    # http://SEU_SERVIDOR:8787
 ```
 
 Os dados (JSON + imagens) ficam no volume `moodboard-data`. Variáveis: `PORT`, `HOST`, `DATA_DIR`, `STATIC_DIR`, `CORS_ORIGIN`, `ADMIN_TOKEN` (no compose: `ADMIN_TOKEN=... docker compose up -d`).
-Para expor na internet, coloque atrás de um proxy com HTTPS (Caddy/Nginx).
+Para expor na internet, coloque atrás de um proxy com HTTPS (Caddy/Nginx). No Nginx, para o tempo real, use `proxy_buffering off;` e `proxy_read_timeout 1h;` no `location /api/` (o servidor já manda `X-Accel-Buffering: no` e um ping a cada 25 s).
 
 ### GitHub Pages (modo local)
 

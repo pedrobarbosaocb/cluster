@@ -4,9 +4,10 @@ import { TOKENS } from '../core/votes.ts';
 import { api } from '../data/api.ts';
 import { confirmBtn, h, icon, iconBtn, toast } from '../ui/dom.ts';
 import { tokenArt } from '../ui/icons.ts';
-import { boardHeader, loadBoard } from './common.ts';
+import { boardHeader, loadBoard, rerender } from './common.ts';
 
-const REFRESH_MS = 15000;
+/** reserva caso o tempo real caia */
+const REFRESH_MS = 60000;
 const ZOOMS = [0.5, 0.65, 0.8, 1, 1.25, 1.5, 2];
 
 export async function boardView(root: HTMLElement, { id }: Record<string, string>): Promise<() => void> {
@@ -17,6 +18,7 @@ export async function boardView(root: HTMLElement, { id }: Record<string, string
   let zi = 3;
   let sig = '';
   const people = h('span', { class: 'chip', title: 'quem já votou' }, icon('people'), '0');
+  const live = h('span', { class: 'chip live-chip', title: 'tempo real desligado', 'aria-label': 'tempo real desligado' }, icon('bolt'));
   const setExportable = (n: number): void => {
     exportBtn.disabled = n === 0;
   };
@@ -57,7 +59,7 @@ export async function boardView(root: HTMLElement, { id }: Record<string, string
       exportBtn.classList.remove('busy');
     }
   });
-  root.append(boardHeader(state.board.name, people, exportBtn), canvas, zoom);
+  root.append(boardHeader(state.board.name, live, people, exportBtn), canvas, zoom);
   zoomLabel();
 
   const render = (s: BoardState): void => {
@@ -161,5 +163,25 @@ export async function boardView(root: HTMLElement, { id }: Record<string, string
   render(state);
   const timer = window.setInterval(() => void refresh(), REFRESH_MS);
 
-  return () => clearInterval(timer);
+  // tempo real: junta rajadas de votos num único recarregamento
+  let pending = 0;
+  const stop = a.subscribe(id!, {
+    onChange: () => {
+      clearTimeout(pending);
+      pending = window.setTimeout(() => void refresh(), 250);
+    },
+    onStatus: (on) => {
+      live.classList.toggle('on', on);
+      const t = on ? 'ao vivo' : 'tempo real desligado';
+      live.title = t;
+      live.setAttribute('aria-label', t);
+    },
+    onLocked: rerender,
+  });
+
+  return () => {
+    clearInterval(timer);
+    clearTimeout(pending);
+    stop();
+  };
 }

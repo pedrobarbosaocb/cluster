@@ -6,6 +6,7 @@ import { isId, newId } from '../src/core/ids.ts';
 import { cleanName, cleanPalette, parseDataUrl } from '../src/core/validate.ts';
 import { isValidVote } from '../src/core/votes.ts';
 import type { Board, BoardState, ImageRec, Vote } from '../src/core/types.ts';
+import { Hub } from './hub.ts';
 import { checkOwner, checkPin, hashPin, newOwnerKey, PIN_RE, Throttle, type BoardSecret } from './auth.ts';
 
 export interface AppOptions {
@@ -119,6 +120,7 @@ async function serveFile(res: ServerResponse, root: string, rel: string, cache: 
 export async function createApp(opts: AppOptions): Promise<Server> {
   const { dataDir, staticDir, maxBody = 12 * 1024 * 1024, corsOrigin, adminToken } = opts;
   const throttle = new Throttle();
+  const hub = new Hub();
   const uploads = join(dataDir, 'uploads');
   await mkdir(uploads, { recursive: true });
   const store = new JsonStore(dataDir);
@@ -192,6 +194,9 @@ export async function createApp(opts: AppOptions): Promise<Server> {
 
     if (!sub && method === 'GET') return send(res, 200, s);
 
+    // tempo real: avisa mudanças do board (mesma checagem de PIN/dono acima)
+    if (sub === 'events' && method === 'GET') return hub.open(boardId, res);
+
     if (sub === 'pin' && method === 'PUT') {
       if (!isOwner) throw new HttpError(403, 'só o dono');
       const { pin } = await readJson(req, 1024);
@@ -201,6 +206,8 @@ export async function createApp(opts: AppOptions): Promise<Server> {
       else next.pin = hashPin(pin);
       store.db.secrets[boardId] = next;
       await store.save();
+      hub.emit(boardId, 'pin');
+      hub.closeBoard(boardId); // quem estava conectado precisa do PIN novo
       return send(res, 200, pub(s.board));
     }
 
@@ -211,6 +218,7 @@ export async function createApp(opts: AppOptions): Promise<Server> {
       store.db.images = store.db.images.filter((i) => i.id !== subId);
       store.db.votes = store.db.votes.filter((v) => v.imageId !== subId);
       await store.save();
+      hub.emit(boardId, 'delete');
       for (const u of [img.url, img.thumbUrl])
         if (u.startsWith('/uploads/')) await rm(join(uploads, u.slice('/uploads/'.length)), { force: true });
       return send(res, 200, { ok: true });
@@ -239,6 +247,7 @@ export async function createApp(opts: AppOptions): Promise<Server> {
       };
       store.db.images.push(rec);
       await store.save();
+      hub.emit(boardId, 'image');
       return send(res, 201, rec);
     }
 
@@ -251,6 +260,7 @@ export async function createApp(opts: AppOptions): Promise<Server> {
       if (idx >= 0) store.db.votes[idx] = vote;
       else store.db.votes.push(vote);
       await store.save();
+      hub.emit(boardId, 'vote');
       const { boardId: _b, ...out } = vote;
       return send(res, 200, out);
     }
@@ -258,7 +268,7 @@ export async function createApp(opts: AppOptions): Promise<Server> {
     throw new HttpError(405, 'método não permitido');
   };
 
-  return createServer((req, res) => {
+  const server = createServer((req, res) => {
     void (async () => {
       const url = new URL(req.url ?? '/', 'http://x');
       const path = decodeURIComponent(url.pathname);
@@ -294,4 +304,6 @@ export async function createApp(opts: AppOptions): Promise<Server> {
       }
     })();
   });
+  server.on('close', () => hub.stop());
+  return server;
 }
