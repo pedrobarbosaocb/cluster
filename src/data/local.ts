@@ -1,0 +1,76 @@
+import { newId } from '../core/ids.ts';
+import type { Board, BoardState, ImageRec, Vote } from '../core/types.ts';
+import type { Api, NewImage } from './api.ts';
+
+const DB = 'flathead-moodboard';
+type Store = 'boards' | 'images' | 'votes';
+
+function open(): Promise<IDBDatabase> {
+  return new Promise((resolve, reject) => {
+    const r = indexedDB.open(DB, 1);
+    r.onupgradeneeded = () => {
+      const db = r.result;
+      db.createObjectStore('boards', { keyPath: 'id' });
+      db.createObjectStore('images', { keyPath: 'id' }).createIndex('boardId', 'boardId');
+      db.createObjectStore('votes', { keyPath: ['imageId', 'voterId'] }).createIndex('boardId', 'boardId');
+    };
+    r.onsuccess = () => resolve(r.result);
+    r.onerror = () => reject(r.error);
+  });
+}
+
+const wrap = <T>(r: IDBRequest<T>): Promise<T> =>
+  new Promise((resolve, reject) => {
+    r.onsuccess = () => resolve(r.result);
+    r.onerror = () => reject(r.error);
+  });
+
+/** Modo local: tudo fica no navegador (IndexedDB). Usado no GitHub Pages / demo. */
+export class LocalApi implements Api {
+  readonly mode = 'local' as const;
+  private db = open();
+
+  private async store(name: Store, mode: IDBTransactionMode = 'readonly'): Promise<IDBObjectStore> {
+    return (await this.db).transaction(name, mode).objectStore(name);
+  }
+
+  async listBoards(): Promise<Board[]> {
+    const all = await wrap((await this.store('boards')).getAll() as IDBRequest<Board[]>);
+    return all.sort((a, b) => b.createdAt - a.createdAt);
+  }
+
+  async createBoard(name: string): Promise<Board> {
+    const board: Board = { id: newId(), name, createdAt: Date.now() };
+    await wrap((await this.store('boards', 'readwrite')).add(board));
+    return board;
+  }
+
+  async getBoard(id: string): Promise<BoardState | null> {
+    const board = await wrap((await this.store('boards')).get(id) as IDBRequest<Board | undefined>);
+    if (!board) return null;
+    const images = await wrap((await this.store('images')).index('boardId').getAll(id) as IDBRequest<ImageRec[]>);
+    const votes = await wrap((await this.store('votes')).index('boardId').getAll(id) as IDBRequest<Vote[]>);
+    return { board, images: images.sort((a, b) => a.createdAt - b.createdAt), votes };
+  }
+
+  async addImage(boardId: string, img: NewImage): Promise<ImageRec> {
+    const rec: ImageRec = {
+      id: newId(),
+      boardId,
+      url: img.image,
+      thumbUrl: img.thumb,
+      width: img.width,
+      height: img.height,
+      palette: img.palette,
+      createdAt: Date.now(),
+    };
+    await wrap((await this.store('images', 'readwrite')).add(rec));
+    return rec;
+  }
+
+  async vote(boardId: string, imageId: string, voterId: string, value: number): Promise<Vote> {
+    const v: Vote = { imageId, voterId, value, at: Date.now() };
+    await wrap((await this.store('votes', 'readwrite')).put({ ...v, boardId }));
+    return v;
+  }
+}
