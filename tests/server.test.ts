@@ -85,6 +85,16 @@ describe('API', () => {
     expect((await fetch(base + '/uploads/..%2fdb.json')).status).toBe(404);
   });
 
+  it('CORS opcional', async () => {
+    const c = await createApp({ dataDir: dir, corsOrigin: 'https://x.github.io' });
+    await new Promise<void>((r) => c.listen(0, '127.0.0.1', r));
+    const res = await fetch(`http://127.0.0.1:${(c.address() as AddressInfo).port}/api/boards`, { method: 'OPTIONS' });
+    expect(res.status).toBe(204);
+    expect(res.headers.get('access-control-allow-origin')).toBe('https://x.github.io');
+    expect((await fetch(base + '/api/health')).headers.get('access-control-allow-origin')).toBeNull();
+    await new Promise((r) => c.close(r));
+  });
+
   it('persiste em disco', async () => {
     const again = await createApp({ dataDir: dir });
     await new Promise<void>((r) => again.listen(0, '127.0.0.1', r));
