@@ -1,4 +1,5 @@
-import type { Palette } from './types.ts';
+import { isId } from './ids.ts';
+import type { Layout, Palette } from './types.ts';
 
 export const MAX_NAME = 60;
 export const MAX_PALETTE = 8;
@@ -32,4 +33,25 @@ export function parseDataUrl(v: unknown): { ext: string; base64: string } | null
   const m = DATA_URL.exec(v);
   if (!m) return null;
   return { ext: m[1] === 'jpeg' ? 'jpg' : m[1]!, base64: m[2]! };
+}
+
+/**
+ * Valida um layout manual vindo do cliente: só ids do board, sem repetição,
+ * sem grupos vazios. Retorna null se for inválido.
+ */
+export function cleanLayout(v: unknown, known: Set<string>): Layout | null {
+  if (!v || typeof v !== 'object') return null;
+  const groups = (v as { groups?: unknown }).groups;
+  if (!Array.isArray(groups) || groups.length === 0 || groups.length > 200) return null;
+  const seen = new Set<string>();
+  const out: string[][] = [];
+  for (const g of groups as unknown[]) {
+    if (!Array.isArray(g) || g.length === 0) return null;
+    for (const id of g as unknown[]) {
+      if (!isId(id) || !known.has(id) || seen.has(id)) return null;
+      seen.add(id);
+    }
+    out.push([...(g as string[])]);
+  }
+  return { groups: out };
 }

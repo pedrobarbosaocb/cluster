@@ -525,3 +525,59 @@
 @keyframes pulse {
   50% { opacity: 0.35; }
 }
+
+/* ───────────── edição do layout ───────────── */
+
+.edit-tools { display: inline-flex; gap: 10px; }
+.mood.editing .cluster {
+  padding: 10px;
+  outline: 2px dashed color-mix(in srgb, var(--ink) 35%, transparent);
+  outline-offset: 4px;
+}
+.mood.editing .cluster-palette {
+  height: 24px;
+  cursor: grab;
+  touch-action: none;
+  box-shadow: 3px 3px 0 var(--shadow);
+}
+.mood.editing .piece {
+  cursor: grab;
+  touch-action: none;
+  outline: 2px dashed var(--ink-soft);
+  outline-offset: 2px;
+  animation: none;
+}
+.mood.editing .piece:hover { transform: none; box-shadow: none; }
+.mood.editing .piece-score { opacity: 1; }
+.dragging-src { opacity: 0.25; }
+body.is-dragging, body.is-dragging * { cursor: grabbing !important; user-select: none; }
+
+.piece.drop-before { box-shadow: -9px 0 0 var(--red); z-index: 4; }
+.piece.drop-after { box-shadow: 9px 0 0 var(--red); z-index: 4; }
+.cluster.drop-before { box-shadow: -14px 0 0 var(--red); }
+.cluster.drop-after { box-shadow: 14px 0 0 var(--red); }
+.cluster.drop-into { outline: 3px dashed var(--red) !important; }
+
+.new-group {
+  display: grid;
+  place-items: center;
+  width: 170px;
+  height: 170px;
+  border: 3px dashed var(--ink-soft);
+  color: var(--ink-soft);
+}
+.new-group .ico { width: 44px; height: 44px; }
+.new-group.drop-into { color: var(--red); background: color-mix(in srgb, var(--red) 10%, transparent); }
+
+.drag-ghost {
+  position: fixed;
+  z-index: 200;
+  width: 96px;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  border: 3px solid var(--ink);
+  background: var(--paper);
+  box-shadow: 6px 6px 0 var(--red);
+}
+.drag-ghost img { display: block; width: 100%; }
+.drag-ghost-group { width: 130px; border-width: 4px; }

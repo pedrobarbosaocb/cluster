@@ -27,6 +27,8 @@ export interface LayoutOptions {
   minSpan?: number;
   maxSpan?: number;
   gap?: number;
+  /** mantém a ordem recebida (layout manual) em vez de ordenar por peso */
+  keepOrder?: boolean;
 }
 
 /**
@@ -45,7 +47,7 @@ export function collage(items: LayoutItem[], opts: LayoutOptions = {}): LayoutRe
     const rows = Math.max(2, Math.round(span / Math.sqrt(aspect)));
     return { it, cols, rows };
   });
-  sized.sort((a, b) => b.it.weight - a.it.weight || b.cols * b.rows - a.cols * a.rows);
+  if (!opts.keepOrder) sized.sort((a, b) => b.it.weight - a.it.weight || b.cols * b.rows - a.cols * a.rows);
 
   const totalArea = sized.reduce((s, x) => s + x.cols * x.rows, 0);
   const widest = Math.max(...sized.map((s) => s.cols));

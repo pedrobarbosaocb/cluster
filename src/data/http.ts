@@ -1,4 +1,4 @@
-import type { Board, BoardState, ImageRec, Vote } from '../core/types.ts';
+import type { Board, BoardState, ImageRec, Layout, Vote } from '../core/types.ts';
 import { LockedError, type Api, type LiveHandlers, type NewImage } from './api.ts';
 import { SseParser, backoff } from './sse.ts';
 import { getCred, setCred } from './creds.ts';
@@ -152,6 +152,10 @@ export class HttpApi implements Api {
     };
     void run();
     return () => ac.abort();
+  }
+
+  async setLayout(boardId: string, layout: Layout | null): Promise<void> {
+    await this.req(`${this.b(boardId)}/layout`, { method: 'PUT', body: JSON.stringify({ layout }) }, boardId);
   }
 
   async setPin(boardId: string, pin: string | null): Promise<Board> {

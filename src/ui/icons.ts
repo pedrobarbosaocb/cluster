@@ -26,6 +26,7 @@ export const icons = {
   drop: stroke('<path d="M12 3s7 7.5 7 12a7 7 0 0 1-14 0c0-4.5 7-12 7-12z"/>'),
   refresh: stroke('<path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/>'),
   arrowLeft: stroke('<path d="M20 12H4M10 6l-6 6 6 6"/>'),
+  move: stroke('<path d="M12 2v20M2 12h20"/><path d="m9 5 3-3 3 3M9 19l3 3 3-3M5 9l-3 3 3 3M19 9l3 3-3 3"/>'),
   lock: stroke('<rect x="4" y="10" width="16" height="11"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><path d="M12 14.5v2.5"/>'),
   unlock: stroke('<rect x="4" y="10" width="16" height="11"/><path d="M8 10V7a4 4 0 0 1 7.5-2"/><path d="M12 14.5v2.5"/>'),
   key: stroke('<circle cx="7.5" cy="15.5" r="4.5"/><path d="m11 12 9-9M16 7l3 3M14 9l2 2"/>'),

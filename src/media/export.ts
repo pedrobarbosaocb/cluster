@@ -58,7 +58,7 @@ export async function renderBoardPng(state: BoardState, scale = 2): Promise<Blob
 
   await Promise.all([document.fonts.load('64px Anton'), document.fonts.load('16px "Special Elite"')]).catch(() => {});
 
-  const mb = buildMoodboard(state.images, state.votes, CELL);
+  const mb = buildMoodboard(state.images, state.votes, CELL, state.layout);
   const boxes = mb.clusters.map((c) => ({ w: Math.max(c.layout.width, 40), h: STRIP + STRIP_GAP + c.layout.height }));
   const target = Math.max(900, Math.sqrt(boxes.reduce((s, b) => s + (b.w + GAP) * (b.h + GAP), 0)) * 1.5);
   const arranged = shelf(boxes, target, GAP);

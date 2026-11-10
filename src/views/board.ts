@@ -1,9 +1,10 @@
-import { buildMoodboard } from '../core/moodboard.ts';
-import type { BoardState, ImageRec } from '../core/types.ts';
+import { buildMoodboard, layoutFromMoodboard, type Moodboard } from '../core/moodboard.ts';
+import type { BoardState, ImageRec, Layout } from '../core/types.ts';
 import { TOKENS } from '../core/votes.ts';
 import { api } from '../data/api.ts';
 import { confirmBtn, h, icon, iconBtn, toast } from '../ui/dom.ts';
 import { tokenArt } from '../ui/icons.ts';
+import { bindLayoutDrag } from './board-edit.ts';
 import { boardHeader, loadBoard, rerender } from './common.ts';
 
 /** reserva caso o tempo real caia */
@@ -17,6 +18,10 @@ export async function boardView(root: HTMLElement, { id }: Record<string, string
 
   let zi = 3;
   let sig = '';
+  let editing = false;
+  let lastMb: Moodboard | null = null;
+  const owner = a.isOwner(id!);
+
   const people = h('span', { class: 'chip', title: 'quem já votou' }, icon('people'), '0');
   const live = h('span', { class: 'chip live-chip', title: 'tempo real desligado', 'aria-label': 'tempo real desligado' }, icon('bolt'));
   const setExportable = (n: number): void => {
@@ -59,16 +64,58 @@ export async function boardView(root: HTMLElement, { id }: Record<string, string
       exportBtn.classList.remove('busy');
     }
   });
-  root.append(boardHeader(state.board.name, live, people, exportBtn), canvas, zoom);
+
+  // ── edição do layout (só dono) ──
+  const editTools = h('span', { class: 'edit-tools' });
+  const resetBtn = confirmBtn('refresh', 'Voltar ao agrupamento automático', async () => {
+    await saveLayout(null);
+    toast('refresh', 'automático');
+  });
+  const editBtn = iconBtn('move', 'Editar layout', () => {
+    editing = !editing;
+    canvas.classList.toggle('editing', editing);
+    editBtn.classList.toggle('btn-mustard', editing);
+    editBtn.setAttribute('aria-pressed', String(editing));
+    sig = '';
+    render(state!);
+  });
+  editBtn.setAttribute('aria-pressed', 'false');
+  if (owner) editTools.append(editBtn);
+  const syncTools = (): void => {
+    resetBtn.hidden = !(editing && lastMb?.manual);
+    if (owner && !resetBtn.isConnected) editTools.append(resetBtn);
+  };
+
+  const drag = bindLayoutDrag(
+    canvas,
+    (): Layout => (lastMb ? layoutFromMoodboard(lastMb) : { groups: [] }),
+    (l) => void saveLayout(l),
+  );
+
+  /** aplica na hora (otimista) e salva; se falhar, recarrega do servidor */
+  async function saveLayout(l: Layout | null): Promise<void> {
+    state = { ...state!, layout: l };
+    sig = '';
+    render(state);
+    try {
+      await a.setLayout(id!, l);
+    } catch {
+      toast('bolt', 'falhou');
+      await refresh();
+    }
+  }
+
+  root.append(boardHeader(state.board.name, editTools, live, people, exportBtn), canvas, zoom);
   zoomLabel();
 
   const render = (s: BoardState): void => {
-    const nextSig = `${s.images.length}|${s.votes.length}|${s.votes.reduce((m, v) => Math.max(m, v.at), 0)}`;
+    const nextSig = `${s.images.length}|${s.votes.length}|${s.votes.reduce((m, v) => Math.max(m, v.at), 0)}|${JSON.stringify(s.layout ?? null)}|${editing}`;
     if (nextSig === sig) return;
     sig = nextSig;
-    const mb = buildMoodboard(s.images, s.votes);
+    const mb = (lastMb = buildMoodboard(s.images, s.votes, 22, s.layout));
     people.lastChild!.textContent = String(mb.voters);
     setExportable(s.images.length);
+    syncTools();
 
     if (!s.images.length) {
       canvas.replaceChildren(
@@ -87,8 +134,12 @@ export async function boardView(root: HTMLElement, { id }: Record<string, string
         const byId = new Map(c.images.map((i) => [i.id, i]));
         return h(
           'section',
-          { class: 'cluster', 'aria-label': `grupo ${ci + 1}` },
-          h('div', { class: 'cluster-palette', title: c.palette.map((p) => p.hex).join(' ') }, ...c.palette.map((p) => h('i', { style: `background:${p.hex};flex:${p.weight}` }))),
+          { class: 'cluster', 'data-group': ci, 'aria-label': `grupo ${ci + 1}` },
+          h(
+            'div',
+            { class: 'cluster-palette', title: editing ? 'Arraste para reordenar o grupo' : c.palette.map((p) => p.hex).join(' ') },
+            ...c.palette.map((p) => h('i', { style: `background:${p.hex};flex:${p.weight}` })),
+          ),
           h(
             'div',
             { class: 'collage', style: `--w:${c.layout.width};--h:${c.layout.height}` },
@@ -100,9 +151,12 @@ export async function boardView(root: HTMLElement, { id }: Record<string, string
                 {
                   class: 'piece',
                   type: 'button',
-                  style: `--x:${p.x};--y:${p.y};--pw:${p.w};--ph:${p.h};--d:${k * 30}ms`,
+                  'data-id': p.id,
+                  style: `--x:${p.x};--y:${p.y};--pw:${p.w};--ph:${p.h};--d:${editing ? 0 : k * 30}ms`,
                   'aria-label': `imagem, nota ${sc.score.toFixed(1)}`,
-                  onclick: () => openLightbox(img, sc.breakdown, sc.count),
+                  onclick: () => {
+                    if (!editing) openLightbox(img, sc.breakdown, sc.count);
+                  },
                 },
                 h('img', { src: img.thumbUrl, alt: '', loading: 'lazy', draggable: 'false' }),
                 sc.count ? h('span', { class: 'piece-score' }, sc.score.toFixed(1)) : null,
@@ -111,6 +165,7 @@ export async function boardView(root: HTMLElement, { id }: Record<string, string
           ),
         );
       }),
+      editing ? h('div', { class: 'cluster new-group', title: 'Solte aqui para criar um grupo', 'aria-label': 'novo grupo' }, icon('plus')) : '',
     );
   };
 
@@ -131,7 +186,7 @@ export async function boardView(root: HTMLElement, { id }: Record<string, string
         ),
         h('span', { class: 'chip' }, icon('people'), String(count)),
         h('div', { class: 'swatches' }, ...img.palette.map((p) => h('i', { style: `background:${p.hex}`, title: p.hex }))),
-        a.isOwner(id!)
+        owner
           ? confirmBtn('trash', 'Apagar imagem', async () => {
               try {
                 await a.deleteImage(id!, img.id);
@@ -154,7 +209,10 @@ export async function boardView(root: HTMLElement, { id }: Record<string, string
   async function refresh(): Promise<void> {
     try {
       const s = await a.getBoard(id!);
-      if (s) render((state = s));
+      if (!s) return;
+      state = s;
+      // não redesenha no meio de um arraste; o commit redesenha depois
+      if (!drag.active()) render(s);
     } catch {
       /* tenta de novo no próximo ciclo */
     }
@@ -183,5 +241,6 @@ export async function boardView(root: HTMLElement, { id }: Record<string, string
     clearInterval(timer);
     clearTimeout(pending);
     stop();
+    drag.dispose();
   };
 }
