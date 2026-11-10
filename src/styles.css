@@ -373,7 +373,7 @@ main {
   font-size: 18px;
   text-transform: uppercase;
   z-index: 100;
-  animation: slam 0.25s cubic-bezier(0.2, 1.6, 0.4, 1);
+  animation: slam 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
 @keyframes slam {
   from {
