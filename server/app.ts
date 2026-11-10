@@ -11,6 +11,8 @@ export interface AppOptions {
   dataDir: string;
   staticDir?: string;
   maxBody?: number;
+  /** origem liberada para CORS (ex.: https://usuario.github.io) */
+  corsOrigin?: string;
 }
 
 interface Db {
@@ -110,7 +112,7 @@ async function serveFile(res: ServerResponse, root: string, rel: string, cache: 
 }
 
 export async function createApp(opts: AppOptions): Promise<Server> {
-  const { dataDir, staticDir, maxBody = 12 * 1024 * 1024 } = opts;
+  const { dataDir, staticDir, maxBody = 12 * 1024 * 1024, corsOrigin } = opts;
   const uploads = join(dataDir, 'uploads');
   await mkdir(uploads, { recursive: true });
   const store = new JsonStore(dataDir);
@@ -198,6 +200,16 @@ export async function createApp(opts: AppOptions): Promise<Server> {
     void (async () => {
       const url = new URL(req.url ?? '/', 'http://x');
       const path = decodeURIComponent(url.pathname);
+      if (corsOrigin) {
+        res.setHeader('access-control-allow-origin', corsOrigin);
+        res.setHeader('access-control-allow-methods', 'GET, POST, PUT, OPTIONS');
+        res.setHeader('access-control-allow-headers', 'content-type');
+        res.setHeader('vary', 'origin');
+        if (req.method === 'OPTIONS') {
+          res.writeHead(204).end();
+          return;
+        }
+      }
       try {
         if (path.startsWith('/api/')) return await handleApi(req, res, path.split('/'));
         if (path.startsWith('/uploads/')) {

@@ -27,3 +27,17 @@ jobs:
         run: npm test
       - name: Build
         run: npm run build
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build da imagem
+        run: docker build -t flathead-moodboard .
+      - name: Smoke test
+        run: |
+          docker run -d --name mb -p 8787:8787 flathead-moodboard
+          for i in $(seq 1 20); do curl -fs localhost:8787/api/health && break; sleep 1; done
+          curl -fs localhost:8787/ | grep -q "Moodboard da FlatHead"
+          curl -fs -X POST localhost:8787/api/boards -H 'content-type: application/json' -d '{"name":"ci"}'
+          docker logs mb

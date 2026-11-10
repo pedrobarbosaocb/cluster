@@ -1,0 +1,10 @@
+services:
+  moodboard:
+    build: .
+    ports:
+      - "8787:8787"
+    volumes:
+      - moodboard-data:/data
+    restart: unless-stopped
+volumes:
+  moodboard-data:

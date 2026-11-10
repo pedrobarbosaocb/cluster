@@ -1,7 +1,75 @@
 # 🤘 Moodboard da FlatHead
 
-Construtor colaborativo de moodboards com estética punk.
+Moodboard colaborativo com estética punk.
 
-1. **Suba** um lote de imagens.
-2. **Avalie** em estilo swipe, distribuindo pesos (tipo planning poker).
-3. **Veja** o moodboard: imagens agrupadas por paleta de cor, com tamanho proporcional à pontuação.
+| | |
+|---|---|
+| ⬆️ **Sobe** | arrasta um lote de imagens (ou Ctrl+V) |
+| 🃏 **Julga** | cada pessoa joga as cartas numa das 5 fichas |
+| 🧩 **Cola** | as imagens viram clusters por paleta de cor, com tamanho pela nota |
+
+## Fichas (pesos estilo planning poker)
+
+| ficha | peso | atalho |
+|---|---|---|
+| 🍅💀 Tomate podre | 1 | `1` |
+| 🍅 Tomate | 2 | `2` |
+| 📰 Fanzine | 3 | `3` |
+| 💿 Vinil | 5 | `4` |
+| 👑 Coroa | 8 | `5` |
+
+Escala Fibonacci: a diferença entre "curti" e "é a cara da banda" pesa mais que entre "ruim" e "meh".
+A nota de cada imagem é uma média bayesiana (poucas avaliações puxam para a média geral), normalizada no board.
+Arrastar a carta para a esquerda pula; `Z` desfaz. Cada dispositivo tem uma identidade anônima: um voto por pessoa por imagem, que pode ser trocado.
+
+## Como funciona o agrupamento
+
+1. **Paleta**: no upload, o navegador reduz a imagem e roda k-means++ no espaço de cor Lab → 5 cores dominantes com peso.
+2. **Distância entre imagens**: para cada cor de A, a menor ΔE até B, ponderada pelo peso (e vice-versa).
+3. **Clusters**: aglomerativo average-linkage, corta quando a distância média passa de ΔE 22.
+4. **Colagem**: cada cluster é empacotado numa grade; nota maior → mais células.
+
+## Rodando
+
+Requer Node ≥ 22.18 (roda TypeScript direto, sem build no servidor).
+
+```bash
+npm ci
+npm run build        # front em dist/
+npm start            # servidor em http://localhost:8787 (dados em ./data)
+npm run seed         # (opcional) cria um board de exemplo
+```
+
+Desenvolvimento com hot reload: `npm run dev:server` e, em outro terminal, `npm run dev` (Vite faz proxy de `/api` e `/uploads`).
+
+> Rede corporativa com inspeção de TLS? Use `NODE_OPTIONS=--use-system-ca npm ci`.
+
+### Servidor privado (Docker)
+
+```bash
+docker compose up -d --build    # http://SEU_SERVIDOR:8787
+```
+
+Os dados (JSON + imagens) ficam no volume `moodboard-data`. Variáveis: `PORT`, `HOST`, `DATA_DIR`, `STATIC_DIR`, `CORS_ORIGIN`.
+Para expor na internet, coloque atrás de um proxy com HTTPS (Caddy/Nginx).
+
+### GitHub Pages (modo local)
+
+O workflow **Deploy GitHub Pages** (manual, em *Actions*) publica o build com `VITE_BACKEND=local`: tudo fica no IndexedDB do navegador — bom para demo, mas sem colaboração entre pessoas. Requer repositório público (ou plano pago) e *Settings → Pages → Source: GitHub Actions*. A colaboração real no Pages é a issue #21 (backend hospedado).
+
+Para apontar o front publicado no Pages para o seu servidor: build com `VITE_API_URL=https://seu-servidor` e rode o servidor com `CORS_ORIGIN=https://<usuario>.github.io`.
+
+## Fluxo de desenvolvimento
+
+- Épicos e features em *Issues* (milestones **MVP** e **Pós-MVP**).
+- Uma branch por feature (`feat/<issues>-<nome>`), PR para `main`.
+- CI em todo PR: lint → typecheck → testes → build, + build/smoke test da imagem Docker.
+
+```
+src/core     algoritmos puros (cor, paleta, cluster, votos, layout) — com testes unitários
+src/data     adaptadores de dados (HTTP / IndexedDB)
+src/media    processamento de imagem no navegador
+src/ui       tema, ícones, shell, router
+src/views    telas
+server       API Node sem dependências
+```
