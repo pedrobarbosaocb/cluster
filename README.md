@@ -22,6 +22,16 @@ Escala Fibonacci: a diferença entre "curti" e "é a cara da banda" pesa mais qu
 A nota de cada imagem é uma média bayesiana (poucas avaliações puxam para a média geral), normalizada no board.
 Arrastar a carta para a esquerda pula; `Z` desfaz. Cada dispositivo tem uma identidade anônima: um voto por pessoa por imagem, que pode ser trocado.
 
+## Dono, PIN e moderação
+
+- Quem **cria o board é o dono**: o navegador guarda uma chave secreta (o servidor só guarda o hash).
+- 🔑 **Painel do dono** (`#/b/<id>/admin`): trancar com **PIN** de 4–8 dígitos, copiar a chave para usar em outro aparelho, **apagar imagens** (as piores aparecem primeiro). A lixeira também aparece no zoom da imagem.
+- Board com PIN: ver, subir e votar pedem o código (o dono passa direto). Após 8 erros em 10 min o IP fica bloqueado naquele board.
+- Ações destrutivas pedem **dois toques** (o botão fica vermelho com ✓).
+- `ADMIN_TOKEN` (variável do servidor, ≥ 16 caracteres) vale como chave de dono de **qualquer** board — use para recuperar uma chave perdida ou assumir boards criados antes desse recurso (cole no painel 🔑).
+- Os arquivos de imagem (`/uploads/*`) não pedem PIN: os nomes são aleatórios e não aparecem sem acesso ao board, mas quem tiver o link direto de uma imagem consegue abri-la.
+- No modo GitHub Pages (local) não há PIN: os dados nem saem do navegador, e quem usa é sempre o dono.
+
 ## Como funciona o agrupamento
 
 1. **Paleta**: no upload, o navegador reduz a imagem e roda k-means++ no espaço de cor Lab → 5 cores dominantes com peso.
@@ -50,7 +60,7 @@ Desenvolvimento com hot reload: `npm run dev:server` e, em outro terminal, `npm 
 docker compose up -d --build    # http://SEU_SERVIDOR:8787
 ```
 
-Os dados (JSON + imagens) ficam no volume `moodboard-data`. Variáveis: `PORT`, `HOST`, `DATA_DIR`, `STATIC_DIR`, `CORS_ORIGIN`.
+Os dados (JSON + imagens) ficam no volume `moodboard-data`. Variáveis: `PORT`, `HOST`, `DATA_DIR`, `STATIC_DIR`, `CORS_ORIGIN`, `ADMIN_TOKEN` (no compose: `ADMIN_TOKEN=... docker compose up -d`).
 Para expor na internet, coloque atrás de um proxy com HTTPS (Caddy/Nginx).
 
 ### GitHub Pages (modo local)

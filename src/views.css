@@ -461,8 +461,11 @@
 
 .admin {
   display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 24px;
+  align-items: start;
 }
+.admin > .panel:last-child { grid-column: 1 / -1; }
 .panel {
   display: grid;
   gap: 16px;
