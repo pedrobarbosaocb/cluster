@@ -15,7 +15,8 @@
     "lint": "eslint .",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
-    "ci": "npm run lint && npm run typecheck && npm test && npm run build"
+    "ci": "npm run lint && npm run typecheck && npm test && npm run build",
+    "seed": "node scripts/seed.ts"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

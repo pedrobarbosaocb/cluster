@@ -34,12 +34,12 @@ export interface LayoutOptions {
  * Coloca da mais importante para a menos, sempre na posição livre mais alta/à esquerda.
  */
 export function collage(items: LayoutItem[], opts: LayoutOptions = {}): LayoutResult {
-  const { cell = 24, minSpan = 4, maxSpan = 11, gap = 6 } = opts;
+  const { cell = 24, minSpan = 3, maxSpan = 12, gap = 6 } = opts;
   if (items.length === 0) return { items: [], width: 0, height: 0 };
 
   const sized = items.map((it) => {
     const w = Math.min(1, Math.max(0, it.weight));
-    const span = minSpan + (maxSpan - minSpan) * Math.sqrt(w);
+    const span = minSpan + (maxSpan - minSpan) * w;
     const aspect = Math.min(2.2, Math.max(0.45, it.aspect || 1));
     const cols = Math.max(2, Math.round(span * Math.sqrt(aspect)));
     const rows = Math.max(2, Math.round(span / Math.sqrt(aspect)));
