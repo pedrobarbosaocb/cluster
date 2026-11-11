@@ -1,8 +1,12 @@
-name: Deploy GitHub Pages (modo local)
+name: Deploy GitHub Pages
 
-# Disparo manual: o Pages exige repositório público (ou plano pago).
-# Nesse modo os dados ficam no navegador de cada pessoa (IndexedDB).
+# Publica o front no Pages. Com as variáveis do repositório SUPABASE_URL e
+# SUPABASE_ANON_KEY (Settings → Secrets and variables → Actions → Variables),
+# usa o backend no Supabase e a colaboração é real; sem elas, cai no modo
+# local (dados só no navegador). O Pages exige repositório público (ou plano pago).
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -16,6 +20,8 @@ concurrency:
 
 jobs:
   build:
+    # no push só publica quando o Supabase está configurado; manual publica sempre
+    if: github.event_name == 'workflow_dispatch' || vars.SUPABASE_URL != ''
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,7 +33,9 @@ jobs:
       - run: npm test
       - run: npm run build
         env:
-          VITE_BACKEND: local
+          VITE_BACKEND: ${{ vars.SUPABASE_URL != '' && 'supabase' || 'local' }}
+          VITE_SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.SUPABASE_ANON_KEY }}
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

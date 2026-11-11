@@ -54,10 +54,19 @@ export interface Api {
 
 let current: Promise<Api> | null = null;
 
-/** Escolhe o adaptador: VITE_BACKEND=local (GitHub Pages / demo) ou server (padrão). */
+/**
+ * Escolhe o adaptador: VITE_BACKEND=supabase (GitHub Pages com colaboração),
+ * local (demo, dados só no navegador) ou server (padrão, servidor Node).
+ */
 export function api(): Promise<Api> {
   current ??= (async () => {
-    if (import.meta.env.VITE_BACKEND === 'local') {
+    const env = import.meta.env;
+    if (env.VITE_BACKEND === 'supabase') {
+      if (!env.VITE_SUPABASE_URL || !env.VITE_SUPABASE_ANON_KEY) throw new Error('faltam VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY');
+      const { SupabaseApi } = await import('./supabase.ts');
+      return new SupabaseApi(env.VITE_SUPABASE_URL, env.VITE_SUPABASE_ANON_KEY);
+    }
+    if (env.VITE_BACKEND === 'local') {
       const { LocalApi } = await import('./local.ts');
       return new LocalApi();
     }
