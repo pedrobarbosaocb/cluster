@@ -81,9 +81,19 @@ docker compose up -d --build    # http://SEU_SERVIDOR:8787
 Os dados (JSON + imagens) ficam no volume `moodboard-data`. Variáveis: `PORT`, `HOST`, `DATA_DIR`, `STATIC_DIR`, `CORS_ORIGIN`, `ADMIN_TOKEN` (no compose: `ADMIN_TOKEN=... docker compose up -d`).
 Para expor na internet, coloque atrás de um proxy com HTTPS (Caddy/Nginx). No Nginx, para o tempo real, use `proxy_buffering off;` e `proxy_read_timeout 1h;` no `location /api/` (o servidor já manda `X-Accel-Buffering: no` e um ping a cada 25 s).
 
-### GitHub Pages (modo local)
+### GitHub Pages + Supabase (colaboração sem servidor próprio)
 
-O workflow **Deploy GitHub Pages** (manual, em *Actions*) publica o build com `VITE_BACKEND=local`: tudo fica no IndexedDB do navegador — bom para demo, mas sem colaboração entre pessoas. Requer repositório público (ou plano pago) e *Settings → Pages → Source: GitHub Actions*. A colaboração real no Pages é a issue #21 (backend hospedado).
+O front estático vai pro Pages e os dados vão pro Supabase (plano grátis). O front só usa a chave pública (`anon`). As tabelas ficam no schema privado `mb`, fora da API, e toda regra (PIN, dono, limite de tentativas) roda nas funções RPC do banco. As imagens vão para o bucket público `moodboard`, e o tempo real usa o Realtime Broadcast (canal `board:<id>`).
+
+1. Crie um projeto em [supabase.com](https://supabase.com) e rode `supabase/migrations/0001_moodboard.sql` inteiro no **SQL Editor** (pode rodar de novo, é idempotente).
+2. Em *Project Settings → API*, copie a **Project URL** e a chave **anon / publishable**.
+3. No GitHub: *Settings → Secrets and variables → Actions → Variables*, crie `SUPABASE_URL` e `SUPABASE_ANON_KEY`.
+4. *Settings → Pages → Source: GitHub Actions* (o Pages exige repositório público ou plano pago).
+5. Todo push na `main` publica. Também dá pra disparar à mão em *Actions → Deploy GitHub Pages*.
+
+Chave mestra de dono (opcional): `insert into mb.config values ('admin_token', '<16+ caracteres>');` no SQL Editor.
+
+Sem as variáveis, o disparo manual publica no modo local (`VITE_BACKEND=local`). Nesse modo tudo fica no IndexedDB do navegador, o que serve para demo mas não tem colaboração.
 
 Para apontar o front publicado no Pages para o seu servidor: build com `VITE_API_URL=https://seu-servidor` e rode o servidor com `CORS_ORIGIN=https://<usuario>.github.io`.
 
